@@ -14,3 +14,7 @@ path = "src/bin/warm_up/main.rs"
 [[bin]]
 name = "day1"
 path = "src/bin/01/main.rs"
+
+[[bin]]
+name = "day2"
+path = "src/bin/02/main.rs"
