@@ -14,3 +14,7 @@ I think learning Rust will be challenging and fun.
 I'm going to be doing something new this year too: I will be doing little write-ups for each day that capture my thought process in solving the problems. I've benefitted from others doing the same in past years, so I think it's time to pay it forward.
 
 Good luck!
+
+## Recaps
+
+[Day One](./src/bin/01/calorie-counting.md)
