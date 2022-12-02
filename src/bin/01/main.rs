@@ -3,11 +3,8 @@ use std::fs;
 pub mod p1;
 pub mod p2;
 
-fn parse_input() -> String {
-    let cals =
-        fs::read_to_string("src/bin/01/input.txt").expect("Should have been able to read the file");
-
-    cals
+fn read_input() -> String {
+    fs::read_to_string("src/bin/01/input.txt").expect("Should have been able to read the file")
 }
 
 fn main() {

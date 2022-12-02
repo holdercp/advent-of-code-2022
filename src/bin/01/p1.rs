@@ -1,5 +1,5 @@
 pub fn solve() -> u32 {
-    let cals = super::parse_input();
+    let cals = super::read_input();
     let mut greatest = 0;
     let mut sum = 0;
 
