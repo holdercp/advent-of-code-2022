@@ -1,7 +1,9 @@
 pub mod p1;
 pub mod p2;
 
-fn parse_input() {}
+fn read_input() -> String {
+    fs::read_to_string("src/bin/DAY/input.txt").expect("Should have been able to read the file")
+}
 
 fn main() {
     println!("Part 1: {}", p1::solve());
