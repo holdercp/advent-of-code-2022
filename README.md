@@ -17,4 +17,4 @@ Good luck!
 
 ## Recaps
 
-[Day One](./src/bin/01/calorie-counting.md)
+[Day One](./src/bin/01/recap.md)
