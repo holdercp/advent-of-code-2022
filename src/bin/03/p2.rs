@@ -7,13 +7,16 @@ pub fn solve() -> usize {
     let rucks: Vec<&str> = input.lines().collect();
     let ruck_chunks = rucks.chunks(3);
 
-    for r in ruck_chunks {
-        let first: HashSet<char> = HashSet::from_iter(r[0].chars());
-        let second: HashSet<char> = HashSet::from_iter(r[1].chars());
-        let last: HashSet<char> = HashSet::from_iter(r[2].chars());
+    for rc in ruck_chunks {
+        let intersection = rc
+            .iter()
+            .map(|c| HashSet::from_iter(c.chars()))
+            .reduce(|acc: HashSet<char>, set| {
+                acc.intersection(&set).map(|c| c.to_owned()).collect()
+            })
+            .unwrap();
 
-        let common: HashSet<char> = first.intersection(&second).map(|c| c.to_owned()).collect();
-        let common: &char = common.intersection(&last).next().unwrap();
+        let common = intersection.iter().next().unwrap();
 
         priority += super::convert_to_priority(common);
     }
