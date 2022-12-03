@@ -5,7 +5,7 @@ enum Shape {
 }
 
 impl Shape {
-    fn get_score(&self) -> i32 {
+    fn score(&self) -> i32 {
         match &self {
             Shape::Rock => 1,
             Shape::Paper => 2,
@@ -28,19 +28,19 @@ struct Round {
 fn calc_round_score(round: &Round) -> i32 {
     match round.opponent_shape {
         Shape::Rock => match round.outcome {
-            Outcome::Lose(score) => score + &Shape::Scissors.get_score(),
-            Outcome::Draw(score) => score + &Shape::Rock.get_score(),
-            Outcome::Win(score) => score + &Shape::Paper.get_score(),
+            Outcome::Lose(score) => score + Shape::Scissors.score(),
+            Outcome::Draw(score) => score + Shape::Rock.score(),
+            Outcome::Win(score) => score + Shape::Paper.score(),
         },
         Shape::Paper => match round.outcome {
-            Outcome::Lose(score) => score + &Shape::Rock.get_score(),
-            Outcome::Draw(score) => score + &Shape::Paper.get_score(),
-            Outcome::Win(score) => score + &Shape::Scissors.get_score(),
+            Outcome::Lose(score) => score + Shape::Rock.score(),
+            Outcome::Draw(score) => score + Shape::Paper.score(),
+            Outcome::Win(score) => score + Shape::Scissors.score(),
         },
         Shape::Scissors => match round.outcome {
-            Outcome::Lose(score) => score + &Shape::Paper.get_score(),
-            Outcome::Draw(score) => score + &Shape::Scissors.get_score(),
-            Outcome::Win(score) => score + &Shape::Rock.get_score(),
+            Outcome::Lose(score) => score + Shape::Paper.score(),
+            Outcome::Draw(score) => score + Shape::Scissors.score(),
+            Outcome::Win(score) => score + Shape::Rock.score(),
         },
     }
 }

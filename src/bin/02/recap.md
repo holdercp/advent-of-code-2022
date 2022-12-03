@@ -190,9 +190,9 @@ My first implementation looked something like this:
 fn calc_round_score(round: &Round) -> i32 {
     match round.opponent_shape {
         Shape::Rock => match round.outcome {
-            Outcome::Lose(score) => score + calc_shape_score(&Shape::Scissors),
-            Outcome::Draw(score) => score + calc_shape_score(&Shape::Rock),
-            Outcome::Win(score) => score + calc_shape_score(&Shape::Paper),
+            Outcome::Lose(score) => score + calc_shape_score(Shape::Scissors),
+            Outcome::Draw(score) => score + calc_shape_score(Shape::Rock),
+            Outcome::Win(score) => score + calc_shape_score(Shape::Paper),
         },
         Shape::Paper => match round.outcome {
           //  ...
@@ -208,7 +208,7 @@ Then I had the thought that I should just add a method to the `Shape` to get its
 
 ```rust
 impl Shape {
-    fn get_score(&self) -> i32 {
+    fn score(&self) -> i32 {
         match &self {
             Shape::Rock => 1,
             Shape::Paper => 2,
@@ -220,19 +220,19 @@ impl Shape {
 fn calc_round_score(round: &Round) -> i32 {
     match round.opponent_shape {
         Shape::Rock => match round.outcome {
-            Outcome::Lose(score) => score + &Shape::Scissors.get_score(),
-            Outcome::Draw(score) => score + &Shape::Rock.get_score(),
-            Outcome::Win(score) => score + &Shape::Paper.get_score(),
+            Outcome::Lose(score) => score + Shape::Scissors.score(),
+            Outcome::Draw(score) => score + Shape::Rock.score(),
+            Outcome::Win(score) => score + Shape::Paper.score(),
         },
         Shape::Paper => match round.outcome {
-            Outcome::Lose(score) => score + &Shape::Rock.get_score(),
-            Outcome::Draw(score) => score + &Shape::Paper.get_score(),
-            Outcome::Win(score) => score + &Shape::Scissors.get_score(),
+            Outcome::Lose(score) => score + Shape::Rock.score(),
+            Outcome::Draw(score) => score + Shape::Paper.score(),
+            Outcome::Win(score) => score + Shape::Scissors.score(),
         },
         Shape::Scissors => match round.outcome {
-            Outcome::Lose(score) => score + &Shape::Paper.get_score(),
-            Outcome::Draw(score) => score + &Shape::Scissors.get_score(),
-            Outcome::Win(score) => score + &Shape::Rock.get_score(),
+            Outcome::Lose(score) => score + Shape::Paper.score(),
+            Outcome::Draw(score) => score + Shape::Scissors.score(),
+            Outcome::Win(score) => score + Shape::Rock.score(),
         },
     }
 }
