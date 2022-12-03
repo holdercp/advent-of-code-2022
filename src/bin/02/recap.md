@@ -129,7 +129,7 @@ Part one done.
 
 ## Part Two
 
-Well, in typical Advent of Code fashion, we have our first twist. The second column of the input doesn't represent our _shape_, it represents the outcome we want to get for that round. I had to sit and think about this change for a bit but since I spent some time strucutring my data well in part one, I didn't have to make many adjustments for part two.
+Well, in typical Advent of Code fashion, we have our first twist. The second column of the input doesn't represent our _shape_, it represents the _outcome_ we want to get for that round. I had to sit and think about this change for a bit but since I spent some time structuring my data well in part one, I didn't have to make many adjustments for part two.
 
 The first change I made was to create an `Outcome` enum. I thought it made a lot of sense for each outcome to hold its score as well. This would let us remove our `calc_outcome_score` function from part 1.
 
@@ -182,7 +182,7 @@ let create_round = |line: &str| {
 
 Now that I had my new `Round` structure correct, all I needed to do was calculate the score for each one.
 
-Since the scoring didn't change from part 1, and I added the score directly on the `Outcome` enum, I could just `match` on the `Round.opponent_shape`, `match` on the `Round.outcome`, and then return the `Outcome` score with the `Shape` score appropriate for the outcome. In otherwords, since I know the outcome and what the opponent played, I know what `Shape` I would need to play (and the associated score) to get that outcome.
+Since the scoring didn't change from part 1, and I added the score directly on the `Outcome` enum, I could just `match` on the `Round.opponent_shape`, `match` on the `Round.outcome`, and then return the `Outcome` score with the `Shape` score appropriate for the outcome. In other words, since I know the outcome and what the opponent played, I know what `Shape` I would need to play (and the associated score) to get that outcome.
 
 My first implementation looked something like this:
 
