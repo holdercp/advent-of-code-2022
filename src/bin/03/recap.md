@@ -50,3 +50,47 @@ fn convert_to_priority(item: &char) -> usize {
 ```
 
 I summed up all the priority values and moved on to part two.
+
+## Part Two
+
+I wrestled with types a lot in this part. Learning about iterators, what they return, and keeping the chain going with the correct type did not come easy. Fortunately, the Rust error output is really helpful and I got to a working solution.
+
+My approach for this part was:
+
+1. Group three lines together.
+2. Map over each line in a group and convert it to a set.
+3. Reduce the sets down to a single intersection by finding the intersection of the first item and the second, then finding the intersection of that result with the last set.
+
+I discovered the `.chunks()` method that creates an iterator of groups of a given size. That made step 1 and 2 simple.
+
+```rust
+    let input = super::read_input();
+    let rucks: Vec<&str> = input.lines().collect();
+    let ruck_chunks = rucks.chunks(3);
+
+    for rc in ruck_chunks {
+        rc.iter().map(|c| HashSet::from_iter(c.chars()))
+    }
+```
+
+Then things got a little tricky with the types. Now that I had an iterator of sets of chars, I needed to get the intersection of each set with the next one and return the resulting intersection as a new set so I could do it again for the last item.
+
+`.reduce()` seemed perfect for this because it uses the first item in the iterator as the initial accumulator value.
+
+The issue I ran into was returning a `HashSet<char>` with each iteration. Typing the accumulator explicitly informed the `.collect()` method what it should collect to but it was referencing the `chars` in the resulting set instead of having owned `chars`. I then mapped over the result of the intersection and returned a `char` after calling `.to_owned()`. I'm not sure if this is the best way but it worked.
+
+```rust
+for rc in ruck_chunks {
+    let intersection = rc
+        .iter()
+        .map(|c| HashSet::from_iter(c.chars()))
+        .reduce(|acc: HashSet<char>, set| {
+            acc.intersection(&set).map(|c| c.to_owned()).collect()
+        })
+        .unwrap();
+}
+```
+
+The final steps were the same as part one: get the first item in the resulting intersection and convert it to a priority value.
+
+Done.
