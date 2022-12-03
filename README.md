@@ -18,4 +18,5 @@ Good luck!
 ## Recaps
 
 [Day One](./src/bin/01/recap.md)
+
 [Day Two](./src/bin/02/recap.md)

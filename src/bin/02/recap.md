@@ -126,3 +126,124 @@ let total = guide.lines().map(create_round).fold(0, calc_score);
 ```
 
 Part one done.
+
+## Part Two
+
+Well, in typical Advent of Code fashion, we have our first twist. The second column of the input doesn't represent our _shape_, it represents the outcome we want to get for that round. I had to sit and think about this change for a bit but since I spent some time strucutring my data well in part one, I didn't have to make many adjustments for part two.
+
+The first change I made was to create an `Outcome` enum. I thought it made a lot of sense for each outcome to hold its score as well. This would let us remove our `calc_outcome_score` function from part 1.
+
+```rust
+enum Outcome {
+    Lose(i32),
+    Draw(i32),
+    Win(i32),
+}
+```
+
+I also updated my `Round` struct to represent the change.
+
+```rust
+struct Round {
+    opponent_shape: Shape,
+    outcome: Outcome,
+}
+```
+
+Now that there's two types represented in a `Round` instead of just `Shape`, I needed to update my `create_shape` builder and create a new `create_outcome` builder so I can construct the new `Round`s.
+
+```rust
+fn create_shape(shape_raw: &str) -> Shape {
+    match shape_raw {
+        "A" => Shape::Rock,
+        "B" => Shape::Paper,
+        "C" => Shape::Scissors,
+        _ => panic!("bad shape"),
+    }
+}
+
+fn create_outcome(outcome_raw: &str) -> Outcome {
+    match outcome_raw {
+        "X" => Outcome::Lose(0),
+        "Y" => Outcome::Draw(3),
+        "Z" => Outcome::Win(6),
+        _ => panic!("bad outcome"),
+    }
+}
+
+let create_round = |line: &str| {
+    let cols: Vec<&str> = line.split_whitespace().collect();
+    Round {
+        opponent_shape: create_shape(cols[0]),
+        outcome: create_outcome(cols[1]),
+    }
+};
+```
+
+Now that I had my new `Round` structure correct, all I needed to do was calculate the score for each one.
+
+Since the scoring didn't change from part 1, and I added the score directly on the `Outcome` enum, I could just `match` on the `Round.opponent_shape`, `match` on the `Round.outcome`, and then return the `Outcome` score with the `Shape` score appropriate for the outcome. In otherwords, since I know the outcome and what the opponent played, I know what `Shape` I would need to play (and the associated score) to get that outcome.
+
+My first implementation looked something like this:
+
+```rust
+fn calc_round_score(round: &Round) -> i32 {
+    match round.opponent_shape {
+        Shape::Rock => match round.outcome {
+            Outcome::Lose(score) => score + calc_shape_score(&Shape::Scissors),
+            Outcome::Draw(score) => score + calc_shape_score(&Shape::Rock),
+            Outcome::Win(score) => score + calc_shape_score(&Shape::Paper),
+        },
+        Shape::Paper => match round.outcome {
+          //  ...
+        },
+        Shape::Scissors => match round.outcome {
+          //  ...
+        },
+    }
+}
+```
+
+Then I had the thought that I should just add a method to the `Shape` to get its own score. That made things a bit cleaner.
+
+```rust
+impl Shape {
+    fn get_score(&self) -> i32 {
+        match &self {
+            Shape::Rock => 1,
+            Shape::Paper => 2,
+            Shape::Scissors => 3,
+        }
+    }
+}
+
+fn calc_round_score(round: &Round) -> i32 {
+    match round.opponent_shape {
+        Shape::Rock => match round.outcome {
+            Outcome::Lose(score) => score + &Shape::Scissors.get_score(),
+            Outcome::Draw(score) => score + &Shape::Rock.get_score(),
+            Outcome::Win(score) => score + &Shape::Paper.get_score(),
+        },
+        Shape::Paper => match round.outcome {
+            Outcome::Lose(score) => score + &Shape::Rock.get_score(),
+            Outcome::Draw(score) => score + &Shape::Paper.get_score(),
+            Outcome::Win(score) => score + &Shape::Scissors.get_score(),
+        },
+        Shape::Scissors => match round.outcome {
+            Outcome::Lose(score) => score + &Shape::Paper.get_score(),
+            Outcome::Draw(score) => score + &Shape::Scissors.get_score(),
+            Outcome::Win(score) => score + &Shape::Rock.get_score(),
+        },
+    }
+}
+```
+
+With all this in place, the last step was to update my `fold` closure to sum up the total.
+
+```rust
+let calc_score = |total, round: Round| total + calc_round_score(&round);
+
+let total = guide.lines().map(create_round).fold(0, calc_score);
+```
+
+Part two done.
