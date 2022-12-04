@@ -33,7 +33,7 @@ All that was left to do was find the intersection.
 let common = first.intersection(&last).next().unwrap();
 ```
 
-Again, because the prompt made it seem like there would only ever be a single common item, I could just call `.next()` to get the first item in the interaction iterable.
+Again, because the prompt made it seem like there would only ever be a single common item, I could just call `.next()` to get the first item in the intersection iterable.
 
 To get the puzzle answer I needed to convert this common item to a priority value (a-z being 1-26 and A-Z being 27-52). I tried thinking of a clever way to do this, like converting the character to a number, but I just decided to do a lookup.
 
