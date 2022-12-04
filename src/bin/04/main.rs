@@ -46,4 +46,8 @@ impl Assignment {
     fn contains(&self, other: &Assignment) -> bool {
         self.start <= other.start && self.end >= other.end
     }
+
+    fn overlaps(&self, other: &Assignment) -> bool {
+        self.contains(other) || (self.start <= other.start && self.end >= other.start)
+    }
 }
