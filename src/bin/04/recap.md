@@ -82,3 +82,36 @@ contain_pairs
 Part one done!
 
 ## Part Two
+
+I completed part two quickly because fortunately it was just adding functionality to part one. Instead of counting containing pairs, I needed to count overlapping pairs.
+
+I implemented an `.overlaps()` method on my `Assignment` that checks for any overlap with another `Assignment`.
+
+```rust
+impl Assignment {
+    // ...
+
+    fn overlaps(&self, other: &Assignment) -> bool {
+        self.contains(other)
+            || other.contains(self)
+            || (self.start <= other.start && self.end >= other.start)
+            || (other.start <= self.start && other.end >= self.start)
+    }
+}
+```
+
+The last step was to update my check in the core loop from part one.
+
+```rust
+let overlap_pairs: u32 = input.lines().map(super::Pair::build).fold(0, |count, p| {
+    if p.first.overlaps(&p.second) {
+        return count + 1;
+    }
+
+    count
+});
+
+overlap_pairs
+```
+
+Part two done!
