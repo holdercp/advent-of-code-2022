@@ -1,17 +1,18 @@
 pub fn solve() -> String {
     let (mut supply, procedure) = super::parse_input();
 
-    for instruction in procedure {
-        for _time in 0..instruction.0 {
-            println!("{:?}", instruction);
-            let c = supply[instruction.1 - 1].pop().unwrap();
-            supply[instruction.2 - 1].push(c);
-        }
+    for step in procedure {
+        let stack = &mut supply[step.1 - 1];
+
+        let mut taken: Vec<char> = stack.drain(stack.len() - step.0..).collect();
+        taken.reverse();
+
+        supply[step.2 - 1].append(&mut taken);
     }
 
     let mut top = String::new();
-    for mut krates in supply {
-        let c = krates.pop().unwrap();
+    for mut crates in supply {
+        let c = crates.pop().unwrap();
         top.push(c);
     }
 

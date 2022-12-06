@@ -27,32 +27,31 @@ fn build_supply(raw: &str) -> Vec<Vec<char>> {
     supply
 }
 
-fn build_instructions(raw: &str) -> Vec<(u32, usize, usize)> {
-    let mut instructions: Vec<(u32, usize, usize)> = Vec::new();
+fn build_procedure(raw: &str) -> Vec<(usize, usize, usize)> {
+    let mut steps: Vec<(usize, usize, usize)> = Vec::new();
 
     for line in raw.lines() {
-        let nums: Vec<u32> = line.split_whitespace().flat_map(|w| w.parse()).collect();
+        let nums: Vec<usize> = line.split_whitespace().flat_map(|w| w.parse()).collect();
 
-        instructions.push((nums[0], nums[1] as usize, nums[2] as usize));
+        steps.push((nums[0], nums[1], nums[2]));
     }
 
-    instructions
+    steps
 }
 
-fn parse_input() -> (Vec<Vec<char>>, Vec<(u32, usize, usize)>) {
+fn parse_input() -> (Vec<Vec<char>>, Vec<(usize, usize, usize)>) {
     let input =
         fs::read_to_string("src/bin/05/input.txt").expect("Should have been able to read the file");
 
     let input: Vec<&str> = input.split("\n\n").collect();
 
     let supply = build_supply(input[0]);
-    let instructions = build_instructions(input[1]);
+    let procedure = build_procedure(input[1]);
 
-    (supply, instructions)
+    (supply, procedure)
 }
 
 fn main() {
-    parse_input();
     println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
 }
