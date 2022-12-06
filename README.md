@@ -24,3 +24,5 @@ Good luck!
 [Day Three](./src/bin/03/recap.md)
 
 [Day Four](./src/bin/04/recap.md)
+
+[Day Five](./src/bin/05/recap.md)

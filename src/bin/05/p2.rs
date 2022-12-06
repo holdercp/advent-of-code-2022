@@ -10,8 +10,8 @@ pub fn solve() -> String {
     }
 
     let mut top = String::new();
-    for mut crates in supply {
-        let c = crates.pop().unwrap();
+    for mut stack in supply {
+        let c = stack.pop().unwrap();
         top.push(c);
     }
 
