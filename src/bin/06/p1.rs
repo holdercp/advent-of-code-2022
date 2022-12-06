@@ -5,12 +5,11 @@ pub fn solve() -> usize {
     let mut marker = 0;
 
     for (i, set) in chars.windows(4).enumerate() {
-        let mut set = set.to_vec();
-        set.sort();
+        let set = set.to_vec();
 
-        let clone = set.clone();
-
-        set.dedup();
+        let mut clone = set.clone();
+        clone.sort();
+        clone.dedup();
 
         if set.len() == clone.len() {
             marker = i + 4;
