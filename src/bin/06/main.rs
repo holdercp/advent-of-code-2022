@@ -4,7 +4,7 @@ pub mod p1;
 pub mod p2;
 
 fn read_input() -> String {
-    fs::read_to_string("src/bin/DAY/input.txt").expect("Should have been able to read the file")
+    fs::read_to_string("src/bin/06/input.txt").expect("Should have been able to read the file")
 }
 
 fn main() {
