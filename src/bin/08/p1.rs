@@ -1,66 +1,100 @@
-use super::Tree;
-
 pub fn solve() -> usize {
-    let trees = super::parse_input();
-    let row_len = &trees.iter().max_by_key(|t| t.y).map(|t| t.y).unwrap();
-    let col_len = &trees.iter().max_by_key(|t| t.x).map(|t| t.x).unwrap();
+    let grid = super::parse_input();
+    let row_len = grid[0].len();
+    let col_len = grid.len();
 
     let mut visible_trees = Vec::new();
 
-    for t in &trees {
-        if t.x == 0 || t.x == *col_len || t.y == 0 || t.y == *row_len {
-            continue;
-        }
+    for (y, row) in grid.iter().enumerate() {
+        for (x, _col) in row.iter().enumerate() {
+            let height = grid[y][x];
 
-        let is_visible = check_viz(&t, &trees);
+            let is_visible = check_viz((&height, &x, &y), &grid, (&row_len, &col_len));
 
-        if is_visible {
-            visible_trees.push(t)
+            if is_visible {
+                visible_trees.push(height);
+            }
         }
     }
 
-    visible_trees.len() + ((row_len + col_len) * 2)
+    visible_trees.len()
 }
 
-fn check_viz(t: &Tree, trees: &Vec<Tree>) -> bool {
-    let up_filter = |other: &&Tree| t.y < other.y && other.x == t.x;
-    let down_filter = |other: &&Tree| t.y > other.y && other.x == t.x;
-    let left_filter = |other: &&Tree| t.x < other.x && other.y == t.y;
-    let right_filter = |other: &&Tree| t.x > other.x && other.y == t.y;
+fn check_viz(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bounds: (&usize, &usize)) -> bool {
+    let (x_bound, y_bound) = bounds;
 
-    let get_max_height = |other: &&Tree| other.height;
-    let get_height = |other: &Tree| other.height;
+    let is_visible = check_up(t, g);
+    if is_visible {
+        return is_visible;
+    }
+    let is_visible = check_down(t, g, y_bound);
+    if is_visible {
+        return is_visible;
+    }
+    let is_visible = check_left(t, g);
+    if is_visible {
+        return is_visible;
+    }
+    let is_visible = check_right(t, g, x_bound);
+    if is_visible {
+        return is_visible;
+    }
 
-    let tallest_up = &trees
-        .iter()
-        .filter(up_filter)
-        .max_by_key(get_max_height)
-        .map(get_height)
-        .unwrap();
+    is_visible
+}
 
-    let tallest_down = &trees
-        .iter()
-        .filter(down_filter)
-        .max_by_key(get_max_height)
-        .map(get_height)
-        .unwrap();
+fn check_up(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>) -> bool {
+    let (height, x, y) = t;
 
-    let tallest_left = &trees
-        .iter()
-        .filter(left_filter)
-        .max_by_key(get_max_height)
-        .map(get_height)
-        .unwrap();
+    for y2 in (0..*y).rev() {
+        let other = g[y2][*x];
 
-    let tallest_right = &trees
-        .iter()
-        .filter(right_filter)
-        .max_by_key(get_max_height)
-        .map(get_height)
-        .unwrap();
+        if *height <= other {
+            return false;
+        }
+    }
 
-    t.height > *tallest_up
-        || t.height > *tallest_down
-        || t.height > *tallest_left
-        || t.height > *tallest_right
+    true
+}
+
+fn check_down(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bound: &usize) -> bool {
+    let (height, x, y) = t;
+
+    for y2 in *y + 1..*bound {
+        let other = g[y2][*x];
+
+        if *height <= other {
+            return false;
+        }
+    }
+
+    true
+}
+
+fn check_left(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>) -> bool {
+    let (height, x, y) = t;
+
+    for x2 in (0..*x).rev() {
+        let other = g[*y][x2];
+
+        if *height <= other {
+            return false;
+        }
+    }
+
+    true
+}
+
+fn check_right(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bound: &usize) -> bool {
+    let (height, x, y) = t;
+
+    for x2 in *x + 1..*bound {
+        let other = g[*y][x2];
+
+        if *height <= other {
+            return false;
+        }
+    }
+
+    true
 }

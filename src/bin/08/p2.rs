@@ -1,5 +1,5 @@
 pub fn solve() -> u32 {
-    let grid = super::parse_input_2();
+    let grid = super::parse_input();
 
     let row_len = grid[0].len();
     let col_len = grid.len();
