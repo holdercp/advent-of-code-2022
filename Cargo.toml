@@ -12,33 +12,37 @@ name = "warm_up"
 path = "src/bin/warm_up/main.rs"
 
 [[bin]]
-name = "day1"
+name = "1"
 path = "src/bin/01/main.rs"
 
 [[bin]]
-name = "day2"
+name = "2"
 path = "src/bin/02/main.rs"
 
 [[bin]]
-name = "day3"
+name = "3"
 path = "src/bin/03/main.rs"
 
 [[bin]]
-name = "day4"
+name = "4"
 path = "src/bin/04/main.rs"
 
 [[bin]]
-name = "day5"
+name = "5"
 path = "src/bin/05/main.rs"
 
 [[bin]]
-name = "day6"
+name = "6"
 path = "src/bin/06/main.rs"
 
 [[bin]]
-name = "day7"
+name = "7"
 path = "src/bin/07/main.rs"
 
 [[bin]]
-name = "day8"
+name = "8"
 path = "src/bin/08/main.rs"
+
+[[bin]]
+name = "9"
+path = "src/bin/09/main.rs"
