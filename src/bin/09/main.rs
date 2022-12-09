@@ -33,6 +33,11 @@ fn main() {
     println!("Part 2: {}", p2::solve());
 }
 
+trait Location {
+    fn x(&self) -> i32;
+    fn y(&self) -> i32;
+}
+
 #[derive(Debug)]
 struct Head {
     x: i32,
@@ -50,6 +55,73 @@ impl Head {
     }
 }
 
+impl Location for Head {
+    fn x(&self) -> i32 {
+        self.x
+    }
+
+    fn y(&self) -> i32 {
+        self.y
+    }
+}
+
+#[derive(Debug)]
+struct Segment {
+    x: i32,
+    y: i32,
+}
+
+impl Location for Segment {
+    fn x(&self) -> i32 {
+        self.x
+    }
+
+    fn y(&self) -> i32 {
+        self.y
+    }
+}
+
+impl Segment {
+    fn step(&self, leader: &impl Location) {
+        if self.is_adjacent(leader) {
+            return;
+        }
+
+        let x_dis = self.x.abs_diff(leader.x());
+        let y_dis = self.y.abs_diff(leader.y());
+
+        if x_dis <= 1 {
+            self.x += leader.x() - self.x;
+
+            let is_neg = leader.y() - self.y < 0;
+            if is_neg {
+                self.y -= 1;
+            } else {
+                self.y += 1;
+            }
+        } else if y_dis <= 1 {
+            self.y += leader.y() - self.y;
+
+            let is_neg = leader.x() - self.x < 0;
+
+            if is_neg {
+                self.x -= 1;
+            } else {
+                self.x += 1;
+            }
+        } else {
+            panic!("bad Segment move")
+        }
+    }
+
+    fn is_adjacent(&self, leader: &impl Location) -> bool {
+        let x_dis = self.x.abs_diff(leader.x());
+        let y_dis = self.y.abs_diff(leader.y());
+
+        x_dis <= 1 && y_dis <= 1
+    }
+}
+
 #[derive(Debug)]
 struct Tail {
     x: i32,
@@ -58,27 +130,18 @@ struct Tail {
 }
 
 impl Tail {
-    fn r#move(&mut self, motion: &Motion) {
-        match motion {
-            Motion::U(steps) => self.y += steps,
-            Motion::D(steps) => self.y -= steps,
-            Motion::L(steps) => self.x -= steps,
-            Motion::R(steps) => self.x += steps,
-        };
-    }
-
-    fn follow(&mut self, leader: &Tail) {
+    fn follow(&mut self, leader: &impl Location) {
         if self.is_adjacent(leader) {
             return;
         }
 
-        let x_dis = self.x.abs_diff(leader.x);
-        let y_dis = self.y.abs_diff(leader.y);
+        let x_dis = self.x.abs_diff(leader.x());
+        let y_dis = self.y.abs_diff(leader.y());
 
         if x_dis <= 1 {
-            self.x += leader.x - self.x;
+            self.x += leader.x() - self.x;
 
-            let is_neg = leader.y - self.y < 0;
+            let is_neg = leader.y() - self.y < 0;
 
             for _ in 1..y_dis {
                 if is_neg {
@@ -89,9 +152,9 @@ impl Tail {
                 self.update_visited()
             }
         } else if y_dis <= 1 {
-            self.y += leader.y - self.y;
+            self.y += leader.y() - self.y;
 
-            let is_neg = leader.x - self.x < 0;
+            let is_neg = leader.x() - self.x < 0;
 
             for _ in 1..x_dis {
                 if is_neg {
@@ -106,9 +169,9 @@ impl Tail {
         }
     }
 
-    fn is_adjacent(&self, leader: &Tail) -> bool {
-        let x_dis = self.x.abs_diff(leader.x);
-        let y_dis = self.y.abs_diff(leader.y);
+    fn is_adjacent(&self, leader: &impl Location) -> bool {
+        let x_dis = self.x.abs_diff(leader.x());
+        let y_dis = self.y.abs_diff(leader.y());
 
         x_dis <= 1 && y_dis <= 1
     }
