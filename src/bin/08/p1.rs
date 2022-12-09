@@ -1,100 +1,43 @@
+use super::Tree;
+
 pub fn solve() -> usize {
     let grid = super::parse_input();
-    let row_len = grid[0].len();
-    let col_len = grid.len();
 
-    let mut visible_trees = Vec::new();
+    let visible_trees: Vec<&Tree> = grid
+        .iter()
+        .flat_map(|r| {
+            r.iter().filter_map(|t| {
+                let vertical: &Vec<Tree> = &grid.iter().map(|rr| rr[t.x]).collect();
+                let horizontal = &grid[t.y];
 
-    for (y, row) in grid.iter().enumerate() {
-        for (x, _col) in row.iter().enumerate() {
-            let height = grid[y][x];
+                let up = &vertical[..t.y];
+                let mut up = up.to_owned();
+                up.reverse();
 
-            let is_visible = check_viz((&height, &x, &y), &grid, (&row_len, &col_len));
+                let down = &vertical[t.y + 1..];
+                let down = down.to_owned();
 
-            if is_visible {
-                visible_trees.push(height);
-            }
-        }
-    }
+                let left = &horizontal[..t.x];
+                let mut left = left.to_owned();
+                left.reverse();
+
+                let right = &horizontal[t.x + 1..];
+                let right = right.to_owned();
+
+                let neighbors = [up, down, left, right];
+
+                let is_visible = neighbors
+                    .iter()
+                    .any(|n| n.iter().all(|other| other.height < t.height));
+
+                if is_visible {
+                    Some(t)
+                } else {
+                    None
+                }
+            })
+        })
+        .collect();
 
     visible_trees.len()
-}
-
-fn check_viz(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bounds: (&usize, &usize)) -> bool {
-    let (x_bound, y_bound) = bounds;
-
-    let is_visible = check_up(t, g);
-    if is_visible {
-        return is_visible;
-    }
-    let is_visible = check_down(t, g, y_bound);
-    if is_visible {
-        return is_visible;
-    }
-    let is_visible = check_left(t, g);
-    if is_visible {
-        return is_visible;
-    }
-    let is_visible = check_right(t, g, x_bound);
-    if is_visible {
-        return is_visible;
-    }
-
-    is_visible
-}
-
-fn check_up(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>) -> bool {
-    let (height, x, y) = t;
-
-    for y2 in (0..*y).rev() {
-        let other = g[y2][*x];
-
-        if *height <= other {
-            return false;
-        }
-    }
-
-    true
-}
-
-fn check_down(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bound: &usize) -> bool {
-    let (height, x, y) = t;
-
-    for y2 in *y + 1..*bound {
-        let other = g[y2][*x];
-
-        if *height <= other {
-            return false;
-        }
-    }
-
-    true
-}
-
-fn check_left(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>) -> bool {
-    let (height, x, y) = t;
-
-    for x2 in (0..*x).rev() {
-        let other = g[*y][x2];
-
-        if *height <= other {
-            return false;
-        }
-    }
-
-    true
-}
-
-fn check_right(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bound: &usize) -> bool {
-    let (height, x, y) = t;
-
-    for x2 in *x + 1..*bound {
-        let other = g[*y][x2];
-
-        if *height <= other {
-            return false;
-        }
-    }
-
-    true
 }

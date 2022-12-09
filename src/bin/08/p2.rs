@@ -1,108 +1,44 @@
-pub fn solve() -> u32 {
+use super::Tree;
+
+pub fn solve() -> usize {
     let grid = super::parse_input();
 
-    let row_len = grid[0].len();
-    let col_len = grid.len();
+    grid.iter()
+        .flat_map(|r| {
+            r.iter().map(|t| {
+                let vertical: &Vec<Tree> = &grid.iter().map(|rr| rr[t.x]).collect();
+                let horizontal = &grid[t.y];
 
-    let mut scores: Vec<u32> = Vec::new();
+                let up = &vertical[..t.y];
+                let mut up = up.to_owned();
+                up.reverse();
 
-    for (y, row) in grid.iter().enumerate() {
-        for (x, _col) in row.iter().enumerate() {
-            let height = grid[y][x];
-            scores.push(compute_scenic_score(
-                (&height, &x, &y),
-                &grid,
-                (&row_len, &col_len),
-            ))
-        }
-    }
+                let down = &vertical[t.y + 1..];
+                let down = down.to_owned();
 
-    *scores.iter().max().unwrap()
-}
+                let left = &horizontal[..t.x];
+                let mut left = left.to_owned();
+                left.reverse();
 
-fn compute_scenic_score(
-    t: (&u32, &usize, &usize),
-    g: &Vec<Vec<u32>>,
-    bounds: (&usize, &usize),
-) -> u32 {
-    let (x_bound, y_bound) = bounds;
+                let right = &horizontal[t.x + 1..];
+                let right = right.to_owned();
 
-    let up_distance = get_up_distance(t, &g);
-    let down_distance = get_down_distance(t, &g, y_bound);
-    let left_distance = get_left_distance(t, &g);
-    let right_distance = get_right_distance(t, &g, x_bound);
+                let neighbors = [up, down, left, right];
 
-    up_distance * down_distance * left_distance * right_distance
-}
+                let score = neighbors.iter().fold(1, |product, n| -> usize {
+                    let distance = n.iter().position(|other| other.height >= t.height);
 
-fn get_up_distance(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>) -> u32 {
-    let (height, x, y) = t;
+                    let d = match distance {
+                        Some(i) => i + 1,
+                        None => n.len(),
+                    };
 
-    let mut distance = 0;
+                    product * d
+                });
 
-    for y2 in (0..*y).rev() {
-        let other = g[y2][*x];
-
-        distance += 1;
-
-        if *height <= other {
-            break;
-        }
-    }
-
-    distance
-}
-
-fn get_down_distance(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bound: &usize) -> u32 {
-    let (height, x, y) = t;
-
-    let mut distance = 0;
-
-    for y2 in *y + 1..*bound {
-        let other = g[y2][*x];
-
-        distance += 1;
-
-        if *height <= other {
-            break;
-        }
-    }
-
-    distance
-}
-
-fn get_left_distance(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>) -> u32 {
-    let (height, x, y) = t;
-
-    let mut distance = 0;
-
-    for x2 in (0..*x).rev() {
-        let other = g[*y][x2];
-
-        distance += 1;
-
-        if *height <= other {
-            break;
-        }
-    }
-
-    distance
-}
-
-fn get_right_distance(t: (&u32, &usize, &usize), g: &Vec<Vec<u32>>, bound: &usize) -> u32 {
-    let (height, x, y) = t;
-
-    let mut distance = 0;
-
-    for x2 in *x + 1..*bound {
-        let other = g[*y][x2];
-
-        distance += 1;
-
-        if *height <= other {
-            break;
-        }
-    }
-
-    distance
+                score
+            })
+        })
+        .max()
+        .unwrap()
 }
