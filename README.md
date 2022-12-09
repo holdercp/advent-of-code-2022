@@ -28,3 +28,5 @@ Good luck!
 [Day Five](./src/bin/05/recap.md)
 
 [Day Six](./src/bin/06/recap.md)
+
+[Day Seven](./src/bin/07/recap.md)
