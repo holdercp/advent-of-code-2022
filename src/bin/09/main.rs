@@ -29,8 +29,15 @@ fn parse_input() -> Vec<Motion> {
 }
 
 fn main() {
-    // println!("Part 1: {}", p1::solve());
+    println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
+}
+
+enum Motion {
+    U(i32),
+    D(i32),
+    L(i32),
+    R(i32),
 }
 
 trait Location {
@@ -38,7 +45,6 @@ trait Location {
     fn y(&self) -> i32;
 }
 
-#[derive(Debug)]
 struct Head {
     x: i32,
     y: i32,
@@ -65,7 +71,6 @@ impl Location for Head {
     }
 }
 
-#[derive(Debug)]
 struct Segment {
     x: i32,
     y: i32,
@@ -82,35 +87,22 @@ impl Location for Segment {
 }
 
 impl Segment {
-    fn step(&self, leader: &impl Location) {
-        if self.is_adjacent(leader) {
-            return;
-        }
+    fn step(&mut self, leader: &impl Location) {
+        if !self.is_adjacent(leader) {
+            let x_dis = self.x.abs_diff(leader.x());
+            let y_dis = self.y.abs_diff(leader.y());
 
-        let x_dis = self.x.abs_diff(leader.x());
-        let y_dis = self.y.abs_diff(leader.y());
+            let x_dir = if leader.x() - self.x < 0 { -1 } else { 1 };
+            let y_dir = if leader.y() - self.y < 0 { -1 } else { 1 };
 
-        if x_dis <= 1 {
-            self.x += leader.x() - self.x;
-
-            let is_neg = leader.y() - self.y < 0;
-            if is_neg {
-                self.y -= 1;
+            if x_dis == 0 {
+                self.y += y_dir;
+            } else if y_dis == 0 {
+                self.x += x_dir;
             } else {
-                self.y += 1;
+                self.x += x_dir;
+                self.y += y_dir;
             }
-        } else if y_dis <= 1 {
-            self.y += leader.y() - self.y;
-
-            let is_neg = leader.x() - self.x < 0;
-
-            if is_neg {
-                self.x -= 1;
-            } else {
-                self.x += 1;
-            }
-        } else {
-            panic!("bad Segment move")
         }
     }
 
@@ -122,7 +114,6 @@ impl Segment {
     }
 }
 
-#[derive(Debug)]
 struct Tail {
     x: i32,
     y: i32,
@@ -130,42 +121,24 @@ struct Tail {
 }
 
 impl Tail {
-    fn follow(&mut self, leader: &impl Location) {
-        if self.is_adjacent(leader) {
-            return;
-        }
+    fn step(&mut self, leader: &impl Location) {
+        if !self.is_adjacent(leader) {
+            let x_dis = self.x.abs_diff(leader.x());
+            let y_dis = self.y.abs_diff(leader.y());
 
-        let x_dis = self.x.abs_diff(leader.x());
-        let y_dis = self.y.abs_diff(leader.y());
+            let x_dir = if leader.x() - self.x < 0 { -1 } else { 1 };
+            let y_dir = if leader.y() - self.y < 0 { -1 } else { 1 };
 
-        if x_dis <= 1 {
-            self.x += leader.x() - self.x;
-
-            let is_neg = leader.y() - self.y < 0;
-
-            for _ in 1..y_dis {
-                if is_neg {
-                    self.y -= 1;
-                } else {
-                    self.y += 1;
-                }
-                self.update_visited()
+            if x_dis == 0 {
+                self.y += y_dir;
+            } else if y_dis == 0 {
+                self.x += x_dir;
+            } else {
+                self.x += x_dir;
+                self.y += y_dir;
             }
-        } else if y_dis <= 1 {
-            self.y += leader.y() - self.y;
 
-            let is_neg = leader.x() - self.x < 0;
-
-            for _ in 1..x_dis {
-                if is_neg {
-                    self.x -= 1;
-                } else {
-                    self.x += 1;
-                }
-                self.update_visited()
-            }
-        } else {
-            panic!("bad Tail move")
+            self.update_visited();
         }
     }
 
@@ -179,15 +152,6 @@ impl Tail {
     fn update_visited(&mut self) {
         let space = (self.x, self.y);
 
-        println!("{:?}, {:?}", self, space);
-
         self.visited.insert(space);
     }
-}
-
-enum Motion {
-    U(i32),
-    D(i32),
-    L(i32),
-    R(i32),
 }

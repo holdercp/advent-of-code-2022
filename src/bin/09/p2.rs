@@ -1,75 +1,51 @@
 use std::collections::HashSet;
 
 use super::Head;
+use super::Motion;
+use super::Segment;
 use super::Tail;
 
 pub fn solve() -> usize {
     let motions = super::parse_input();
-    let mut head = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail1 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail2 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail3 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail4 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail5 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail6 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail7 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail8 = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
-    let mut tail9 = Tail {
+    let mut head = Head { x: 0, y: 0 };
+    let mut segment1 = Segment { x: 0, y: 0 };
+    let mut segment2 = Segment { x: 0, y: 0 };
+    let mut segment3 = Segment { x: 0, y: 0 };
+    let mut segment4 = Segment { x: 0, y: 0 };
+    let mut segment5 = Segment { x: 0, y: 0 };
+    let mut segment6 = Segment { x: 0, y: 0 };
+    let mut segment7 = Segment { x: 0, y: 0 };
+    let mut segment8 = Segment { x: 0, y: 0 };
+    let mut tail = Tail {
         x: 0,
         y: 0,
         visited: HashSet::new(),
     };
 
-    tail9.update_visited();
+    tail.update_visited();
 
     motions.iter().for_each(|m| {
         head.r#move(m);
-        tail1.follow(&head);
-        tail2.follow(&tail1);
-        tail3.follow(&tail2);
-        tail4.follow(&tail3);
-        tail5.follow(&tail4);
-        tail6.follow(&tail5);
-        tail7.follow(&tail6);
-        tail8.follow(&tail7);
-        tail9.follow(&tail8);
+
+        let steps = match m {
+            Motion::U(steps) => steps,
+            Motion::D(steps) => steps,
+            Motion::L(steps) => steps,
+            Motion::R(steps) => steps,
+        };
+
+        for _ in 0..*steps {
+            segment1.step(&head);
+            segment2.step(&segment1);
+            segment3.step(&segment2);
+            segment4.step(&segment3);
+            segment5.step(&segment4);
+            segment6.step(&segment5);
+            segment7.step(&segment6);
+            segment8.step(&segment7);
+            tail.step(&segment8);
+        }
     });
 
-    tail9.visited.len()
+    tail.visited.len()
 }
