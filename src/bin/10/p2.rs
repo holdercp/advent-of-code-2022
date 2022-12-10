@@ -13,7 +13,7 @@ pub fn solve() -> Vec<Vec<char>> {
         let pos = cycle % 40;
 
         if pos == l || pos == c || pos == r {
-            display[get_display_row(&cycle)][cycle % 40] = '#';
+            display[row(&cycle)][pos] = '#';
         }
 
         register += value;
@@ -22,7 +22,7 @@ pub fn solve() -> Vec<Vec<char>> {
     display.iter().map(|r| r.to_vec()).collect()
 }
 
-fn get_display_row(cycle: &usize) -> usize {
+fn row(cycle: &usize) -> usize {
     if cycle < &40 {
         0
     } else if cycle < &80 {
