@@ -33,7 +33,7 @@ enum OperationType {
 
 #[derive(Debug)]
 enum Operand {
-    Integer(u32),
+    Integer(u64),
     Item,
 }
 
@@ -65,7 +65,7 @@ impl Operation {
         Operation(opt, opd1, opd2)
     }
 
-    fn execute(&self, item: &Item) -> u32 {
+    fn execute(&self, item: &Item, mod_div: Option<u64>) -> u64 {
         let Operation(opt, opd1, opd2) = self;
 
         match opt {
@@ -79,7 +79,10 @@ impl Operation {
                     Operand::Item => &item.worry,
                 };
 
-                a * b
+                match mod_div {
+                    Some(md) => (a * b) % md,
+                    None => a * b,
+                }
             }
             OperationType::Add => {
                 let a = match opd1 {
@@ -91,7 +94,10 @@ impl Operation {
                     Operand::Item => &item.worry,
                 };
 
-                a + b
+                match mod_div {
+                    Some(md) => (a + b) % md,
+                    None => a + b,
+                }
             }
         }
     }
@@ -99,14 +105,14 @@ impl Operation {
 
 #[derive(Debug)]
 struct Test {
-    divisor: u32,
+    divisor: u64,
     t: usize,
     f: usize,
 }
 
 impl Test {
     fn build(raw: Vec<&str>) -> Test {
-        let divisor: u32 = raw[0][19..].parse().unwrap();
+        let divisor: u64 = raw[0][19..].parse().unwrap();
         let t: usize = raw[1][25..].parse().unwrap();
         let f: usize = raw[2][26..].parse().unwrap();
 
@@ -119,7 +125,7 @@ struct Monkey {
     items: VecDeque<Item>,
     operation: Operation,
     test: Test,
-    inspected: u32,
+    inspected: u64,
 }
 
 impl Monkey {
@@ -143,8 +149,13 @@ impl Monkey {
         self.items.pop_front().unwrap()
     }
 
-    fn test(&self, item: &Item) -> usize {
-        if item.worry % self.test.divisor == 0 {
+    fn test(&self, item: &Item, mod_div: Option<u64>) -> usize {
+        let md = match mod_div {
+            Some(d) => self.test.divisor % d,
+            None => self.test.divisor,
+        };
+
+        if item.worry % md == 0 {
             self.test.t
         } else {
             self.test.f
@@ -154,11 +165,11 @@ impl Monkey {
 
 #[derive(Debug)]
 struct Item {
-    worry: u32,
+    worry: u64,
 }
 
 impl Item {
-    fn new(worry: u32) -> Self {
+    fn new(worry: u64) -> Self {
         Self { worry }
     }
 
@@ -166,7 +177,7 @@ impl Item {
         let items_raw = &raw[16..];
         items_raw
             .split(", ")
-            .flat_map(|n| n.parse::<u32>())
+            .flat_map(|n| n.parse::<u64>())
             .map(Item::new)
             .collect()
     }
