@@ -1,17 +1,16 @@
 use std::collections::HashSet;
 
+use crate::Follower;
+use crate::Knot;
+
 use super::Head;
 use super::Motion;
 use super::Tail;
 
 pub fn solve() -> usize {
     let motions = super::parse_input();
-    let mut head = Head { x: 0, y: 0 };
-    let mut tail = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
+    let mut head = Head::new();
+    let mut tail = Tail::new();
 
     tail.update_visited();
 

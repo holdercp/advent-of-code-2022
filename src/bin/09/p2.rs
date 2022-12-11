@@ -1,4 +1,5 @@
-use std::collections::HashSet;
+use crate::Follower;
+use crate::Knot;
 
 use super::Head;
 use super::Motion;
@@ -7,20 +8,16 @@ use super::Tail;
 
 pub fn solve() -> usize {
     let motions = super::parse_input();
-    let mut head = Head { x: 0, y: 0 };
-    let mut segment1 = Segment { x: 0, y: 0 };
-    let mut segment2 = Segment { x: 0, y: 0 };
-    let mut segment3 = Segment { x: 0, y: 0 };
-    let mut segment4 = Segment { x: 0, y: 0 };
-    let mut segment5 = Segment { x: 0, y: 0 };
-    let mut segment6 = Segment { x: 0, y: 0 };
-    let mut segment7 = Segment { x: 0, y: 0 };
-    let mut segment8 = Segment { x: 0, y: 0 };
-    let mut tail = Tail {
-        x: 0,
-        y: 0,
-        visited: HashSet::new(),
-    };
+    let mut head = Head::new();
+    let mut segment1 = Segment::new();
+    let mut segment2 = Segment::new();
+    let mut segment3 = Segment::new();
+    let mut segment4 = Segment::new();
+    let mut segment5 = Segment::new();
+    let mut segment6 = Segment::new();
+    let mut segment7 = Segment::new();
+    let mut segment8 = Segment::new();
+    let mut tail = Tail::new();
 
     tail.update_visited();
 

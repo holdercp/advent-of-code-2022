@@ -40,118 +40,159 @@ enum Motion {
     R(i32),
 }
 
-trait Location {
-    fn x(&self) -> i32;
-    fn y(&self) -> i32;
+#[derive(Eq, Hash, PartialEq, Clone, Copy)]
+struct Point(i32, i32);
+
+trait Knot {
+    fn new() -> Self;
+
+    fn get_position(&self) -> Point;
+    fn set_position(&mut self, point: Point);
+}
+
+trait Follower
+where
+    Self: Knot,
+{
+    fn is_adjacent(&self, leader: &impl Knot) -> bool {
+        let Point(x, y) = self.get_position();
+        let Point(lx, ly) = leader.get_position();
+
+        let x_dis = x.abs_diff(lx);
+        let y_dis = y.abs_diff(ly);
+
+        x_dis <= 1 && y_dis <= 1
+    }
+
+    fn step(&mut self, leader: &impl Knot) {
+        if self.is_adjacent(leader) {
+            return;
+        }
+
+        let Point(x, y) = self.get_position();
+        let Point(lx, ly) = leader.get_position();
+
+        let x_dis = x.abs_diff(lx);
+        let y_dis = y.abs_diff(ly);
+
+        let x_dir = if lx - x < 0 { -1 } else { 1 };
+        let y_dir = if ly - y < 0 { -1 } else { 1 };
+
+        if x_dis == 0 {
+            self.set_position(Point(x, y + y_dir));
+        } else if y_dis == 0 {
+            self.set_position(Point(x + x_dir, y));
+        } else {
+            self.set_position(Point(x + x_dir, y + y_dir));
+        }
+    }
 }
 
 struct Head {
-    x: i32,
-    y: i32,
+    position: Point,
 }
 
 impl Head {
     fn r#move(&mut self, motion: &Motion) {
+        let Point(x, y) = self.get_position();
+
         match motion {
-            Motion::U(steps) => self.y += steps,
-            Motion::D(steps) => self.y -= steps,
-            Motion::L(steps) => self.x -= steps,
-            Motion::R(steps) => self.x += steps,
+            Motion::U(steps) => self.set_position(Point(x, y + steps)),
+            Motion::D(steps) => self.set_position(Point(x, y - steps)),
+            Motion::L(steps) => self.set_position(Point(x - steps, y)),
+            Motion::R(steps) => self.set_position(Point(x + steps, y)),
         };
     }
 }
 
-impl Location for Head {
-    fn x(&self) -> i32 {
-        self.x
+impl Knot for Head {
+    fn new() -> Self {
+        Self {
+            position: Point(0, 0),
+        }
     }
 
-    fn y(&self) -> i32 {
-        self.y
+    fn get_position(&self) -> Point {
+        self.position
+    }
+
+    fn set_position(&mut self, point: Point) {
+        self.position = point;
     }
 }
 
 struct Segment {
-    x: i32,
-    y: i32,
+    position: Point,
 }
 
-impl Location for Segment {
-    fn x(&self) -> i32 {
-        self.x
-    }
-
-    fn y(&self) -> i32 {
-        self.y
-    }
-}
-
-impl Segment {
-    fn step(&mut self, leader: &impl Location) {
-        if !self.is_adjacent(leader) {
-            let x_dis = self.x.abs_diff(leader.x());
-            let y_dis = self.y.abs_diff(leader.y());
-
-            let x_dir = if leader.x() - self.x < 0 { -1 } else { 1 };
-            let y_dir = if leader.y() - self.y < 0 { -1 } else { 1 };
-
-            if x_dis == 0 {
-                self.y += y_dir;
-            } else if y_dis == 0 {
-                self.x += x_dir;
-            } else {
-                self.x += x_dir;
-                self.y += y_dir;
-            }
+impl Knot for Segment {
+    fn new() -> Self {
+        Self {
+            position: Point(0, 0),
         }
     }
 
-    fn is_adjacent(&self, leader: &impl Location) -> bool {
-        let x_dis = self.x.abs_diff(leader.x());
-        let y_dis = self.y.abs_diff(leader.y());
+    fn get_position(&self) -> Point {
+        self.position
+    }
 
-        x_dis <= 1 && y_dis <= 1
+    fn set_position(&mut self, point: Point) {
+        self.position = point;
     }
 }
 
+impl Follower for Segment {}
+
 struct Tail {
-    x: i32,
-    y: i32,
-    visited: HashSet<(i32, i32)>,
+    position: Point,
+    visited: HashSet<Point>,
 }
 
 impl Tail {
-    fn step(&mut self, leader: &impl Location) {
-        if !self.is_adjacent(leader) {
-            let x_dis = self.x.abs_diff(leader.x());
-            let y_dis = self.y.abs_diff(leader.y());
+    fn update_visited(&mut self) {
+        self.visited.insert(self.get_position());
+    }
+}
 
-            let x_dir = if leader.x() - self.x < 0 { -1 } else { 1 };
-            let y_dir = if leader.y() - self.y < 0 { -1 } else { 1 };
-
-            if x_dis == 0 {
-                self.y += y_dir;
-            } else if y_dis == 0 {
-                self.x += x_dir;
-            } else {
-                self.x += x_dir;
-                self.y += y_dir;
-            }
-
-            self.update_visited();
+impl Knot for Tail {
+    fn new() -> Self {
+        Self {
+            position: Point(0, 0),
+            visited: HashSet::new(),
         }
     }
-
-    fn is_adjacent(&self, leader: &impl Location) -> bool {
-        let x_dis = self.x.abs_diff(leader.x());
-        let y_dis = self.y.abs_diff(leader.y());
-
-        x_dis <= 1 && y_dis <= 1
+    fn get_position(&self) -> Point {
+        self.position
     }
 
-    fn update_visited(&mut self) {
-        let space = (self.x, self.y);
+    fn set_position(&mut self, point: Point) {
+        self.position = point;
+    }
+}
 
-        self.visited.insert(space);
+impl Follower for Tail {
+    fn step(&mut self, leader: &impl Knot) {
+        if self.is_adjacent(leader) {
+            return;
+        }
+
+        let Point(x, y) = self.get_position();
+        let Point(lx, ly) = leader.get_position();
+
+        let x_dis = x.abs_diff(lx);
+        let y_dis = y.abs_diff(ly);
+
+        let x_dir = if lx - x < 0 { -1 } else { 1 };
+        let y_dir = if ly - y < 0 { -1 } else { 1 };
+
+        if x_dis == 0 {
+            self.set_position(Point(x, y + y_dir));
+        } else if y_dis == 0 {
+            self.set_position(Point(x + x_dir, y));
+        } else {
+            self.set_position(Point(x + x_dir, y + y_dir));
+        }
+
+        self.update_visited();
     }
 }

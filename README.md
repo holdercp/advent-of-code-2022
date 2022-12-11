@@ -33,4 +33,6 @@ Good luck!
 
 [Day Eight](./src/bin/08/recap.md)
 
+[Day Nine](./src/bin/09/recap.md)
+
 [Day Ten](./src/bin/10/recap.md)
