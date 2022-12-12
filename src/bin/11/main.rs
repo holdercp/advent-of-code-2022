@@ -65,7 +65,7 @@ impl Operation {
         Operation(opt, opd1, opd2)
     }
 
-    fn execute(&self, item: &Item, mod_div: Option<u64>) -> u64 {
+    fn execute(&self, item: &Item) -> u64 {
         let Operation(opt, opd1, opd2) = self;
 
         match opt {
@@ -79,10 +79,7 @@ impl Operation {
                     Operand::Item => &item.worry,
                 };
 
-                match mod_div {
-                    Some(md) => (a * b) % md,
-                    None => a * b,
-                }
+                a * b
             }
             OperationType::Add => {
                 let a = match opd1 {
@@ -94,10 +91,7 @@ impl Operation {
                     Operand::Item => &item.worry,
                 };
 
-                match mod_div {
-                    Some(md) => (a + b) % md,
-                    None => a + b,
-                }
+                a + b
             }
         }
     }
@@ -149,13 +143,8 @@ impl Monkey {
         self.items.pop_front().unwrap()
     }
 
-    fn test(&self, item: &Item, mod_div: Option<u64>) -> usize {
-        let md = match mod_div {
-            Some(d) => self.test.divisor % d,
-            None => self.test.divisor,
-        };
-
-        if item.worry % md == 0 {
+    fn test(&self, item: &Item) -> usize {
+        if item.worry % self.test.divisor == 0 {
             self.test.t
         } else {
             self.test.f

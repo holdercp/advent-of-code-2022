@@ -10,13 +10,9 @@ pub fn solve() -> u64 {
             while !monkey.items.is_empty() {
                 let mut item = monkey.inspect_item();
 
-                let new_worry = monkey.operation.execute(&item, None);
+                item.worry = monkey.operation.execute(&item) / 3;
 
-                let new_worry = new_worry / 3;
-
-                item.worry = new_worry;
-
-                let other_id = monkey.test(&item, None);
+                let other_id = monkey.test(&item);
 
                 monkeys.get_mut(&other_id).unwrap().items.push_back(item);
             }
