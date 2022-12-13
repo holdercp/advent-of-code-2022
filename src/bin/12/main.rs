@@ -5,6 +5,7 @@ pub mod p2;
 
 fn parse_input() -> (
     (usize, usize),
+    Vec<(usize, usize)>,
     (usize, usize),
     HashMap<(usize, usize), Vec<(usize, usize)>>,
 ) {
@@ -20,6 +21,7 @@ fn build_graph(
     grid: &Vec<Vec<char>>,
 ) -> (
     (usize, usize),
+    Vec<(usize, usize)>,
     (usize, usize),
     HashMap<(usize, usize), Vec<(usize, usize)>>,
 ) {
@@ -28,6 +30,7 @@ fn build_graph(
 
     let mut highest: (usize, usize) = (0, 0);
     let mut start: (usize, usize) = (0, 0);
+    let mut starts: Vec<(usize, usize)> = Vec::new();
 
     let mut graph: HashMap<(usize, usize), Vec<(usize, usize)>> = HashMap::new();
 
@@ -56,16 +59,20 @@ fn build_graph(
             graph.insert((x, y), neighbors);
 
             if *elevation == 'E' {
-                highest = (x, y)
+                highest = (x, y);
             }
 
-            if *elevation == 'S' {
-                start = (x, y)
+            if *elevation == 'S' || *elevation == 'a' {
+                starts.push((x, y));
+
+                if *elevation == 'S' {
+                    start = (x, y);
+                }
             }
         }
     }
 
-    (start, highest, graph)
+    (start, starts, highest, graph)
 }
 
 fn can_traverse(a: &char, b: &char) -> bool {

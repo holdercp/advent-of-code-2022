@@ -1,7 +1,7 @@
 use std::collections::{HashSet, VecDeque};
 
 pub fn solve() -> u32 {
-    let (start, target, graph) = super::parse_input();
+    let (start, _, target, graph) = super::parse_input();
 
     let mut visited: HashSet<&(usize, usize)> = HashSet::new();
     let mut q: VecDeque<(u32, &(usize, usize))> = VecDeque::new();
