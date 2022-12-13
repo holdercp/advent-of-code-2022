@@ -32,7 +32,7 @@ fn build_graph(
     let mut graph: HashMap<(usize, usize), Vec<(usize, usize)>> = HashMap::new();
 
     for (y, row) in grid.iter().enumerate() {
-        for (x, e) in row.iter().enumerate() {
+        for (x, _) in row.iter().enumerate() {
             let elevation = &grid[y][x];
 
             let mut neighbors: Vec<(usize, usize)> = Vec::new();
