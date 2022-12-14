@@ -22,6 +22,20 @@ fn parse_input() -> Vec<Pair> {
         .collect()
 }
 
+fn parse_input2() -> Vec<Value> {
+    let mut input =
+        fs::read_to_string("src/bin/13/input.txt").expect("Should have been able to read the file");
+
+    input.extend(["[[2]]\n", "[[6]]"]);
+    input = input.replace("\n\n", "");
+    input = input.replace("][", "]\n[");
+
+    input
+        .lines()
+        .flat_map(|packet| serde_json::from_str(packet))
+        .collect()
+}
+
 fn main() {
     println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
