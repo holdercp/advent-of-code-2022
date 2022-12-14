@@ -5,11 +5,9 @@ use crate::parse_input2;
 pub fn solve() -> usize {
     let mut packets = parse_input2();
 
-    let mut swap = false;
-
     loop {
         let mut index = 0;
-        swap = false;
+        let mut swap = false;
 
         loop {
             if index + 1 < packets.len() {
