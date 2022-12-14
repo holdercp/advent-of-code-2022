@@ -24,7 +24,7 @@ fn parse_input() -> Vec<Vec<char>> {
         .max()
         .unwrap();
 
-    let mut grid: Vec<Vec<char>> = vec![vec!['.'; x_bound + 1000]; y_bound + 1];
+    let mut grid: Vec<Vec<char>> = vec![vec!['.'; x_bound + 1000]; y_bound + 2];
 
     input.lines().for_each(|l| {
         let coors: Vec<(usize, usize)> = l
