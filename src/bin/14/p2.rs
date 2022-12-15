@@ -3,12 +3,12 @@ pub fn solve() -> u32 {
     let mut sand_count = 0;
 
     loop {
-        let mut sand = (500, 0);
-        sand_count += 1;
-
         if grid[0][500] == 'o' {
             break;
         }
+
+        let mut sand = (500, 0);
+        sand_count += 1;
 
         loop {
             match find_next(&sand, &grid) {
@@ -22,7 +22,7 @@ pub fn solve() -> u32 {
         }
     }
 
-    sand_count - 1
+    sand_count
 }
 
 fn find_next(sand: &(usize, usize), grid: &Vec<Vec<char>>) -> Option<(usize, usize)> {
