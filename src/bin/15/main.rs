@@ -1,4 +1,4 @@
-use std::fs;
+use std::{collections::HashSet, fs};
 
 use regex::Regex;
 
@@ -36,7 +36,7 @@ fn parse_input() -> Vec<Sensor> {
 }
 
 fn main() {
-    println!("Part 1: {}", p1::solve());
+    // println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
 }
 
@@ -59,11 +59,85 @@ struct Sensor {
 }
 
 impl Sensor {
-    fn get_min_range(&self) -> i32 {
+    fn get_min_y(&self) -> i32 {
         self.location.y - self.distance as i32
     }
 
-    fn get_max_range(&self) -> i32 {
+    fn get_max_y(&self) -> i32 {
         self.location.y + self.distance as i32
+    }
+
+    fn get_min_x(&self) -> i32 {
+        self.location.x - self.distance as i32
+    }
+
+    fn get_max_x(&self) -> i32 {
+        self.location.x + self.distance as i32
+    }
+
+    fn get_adjacent_locations(&self) -> Vec<Location> {
+        let mut locations = Vec::new();
+
+        self.get_boundary().into_iter().for_each(|l| {
+            if l.x >= self.location.x {
+                locations.push(Location { x: l.x + 1, y: l.y });
+            }
+
+            if l.x <= self.location.x {
+                locations.push(Location { x: l.x - 1, y: l.y });
+            }
+
+            if l.x == self.location.x && l.y == self.get_min_y() {
+                locations.push(Location { x: l.x, y: l.y - 1 });
+            }
+
+            if l.x == self.location.x && l.y == self.get_max_y() {
+                locations.push(Location { x: l.x, y: l.y + 1 });
+            }
+        });
+
+        locations
+    }
+
+    fn get_boundary(&self) -> Vec<Location> {
+        let mut boundary = Vec::new();
+
+        boundary.push(Location {
+            x: self.location.x,
+            y: self.get_max_y(),
+        });
+        boundary.push(Location {
+            x: self.location.x,
+            y: self.get_min_y(),
+        });
+        boundary.push(Location {
+            x: self.get_min_x(),
+            y: self.location.y,
+        });
+        boundary.push(Location {
+            x: self.get_max_x(),
+            y: self.location.y,
+        });
+
+        for i in 1..self.distance {
+            boundary.push(Location {
+                x: self.location.x + i as i32,
+                y: self.get_min_y() + i as i32,
+            });
+            boundary.push(Location {
+                x: self.location.x + i as i32,
+                y: self.get_max_y() - i as i32,
+            });
+            boundary.push(Location {
+                x: self.location.x - i as i32,
+                y: self.get_min_y() + i as i32,
+            });
+            boundary.push(Location {
+                x: self.location.x - i as i32,
+                y: self.get_max_y() - i as i32,
+            });
+        }
+
+        boundary
     }
 }

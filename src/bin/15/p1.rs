@@ -12,7 +12,7 @@ pub fn solve() -> usize {
     let mut locations: HashSet<Location> = HashSet::new();
 
     for s in &sensors {
-        if ROW as i32 >= s.get_min_range() && ROW as i32 <= s.get_max_range() {
+        if ROW as i32 >= s.get_min_y() && ROW as i32 <= s.get_max_y() {
             let y_diff = ROW.abs_diff(s.location.y);
 
             let x_min = s.location.x - (s.distance - y_diff) as i32;
