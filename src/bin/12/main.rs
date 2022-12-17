@@ -3,12 +3,7 @@ use std::{collections::HashMap, fs};
 pub mod p1;
 pub mod p2;
 
-fn parse_input() -> (
-    (usize, usize),
-    Vec<(usize, usize)>,
-    (usize, usize),
-    HashMap<(usize, usize), Vec<(usize, usize)>>,
-) {
+fn parse_input() -> (Point, Vec<Point>, Point, HashMap<Point, Vec<Point>>) {
     let input =
         fs::read_to_string("src/bin/12/input.txt").expect("Should have been able to read the file");
 
@@ -17,56 +12,49 @@ fn parse_input() -> (
     build_graph(&grid)
 }
 
-fn build_graph(
-    grid: &Vec<Vec<char>>,
-) -> (
-    (usize, usize),
-    Vec<(usize, usize)>,
-    (usize, usize),
-    HashMap<(usize, usize), Vec<(usize, usize)>>,
-) {
+fn build_graph(grid: &Vec<Vec<char>>) -> (Point, Vec<Point>, Point, HashMap<Point, Vec<Point>>) {
     let h_bound = grid[0].len() - 1;
     let v_bound = grid.len() - 1;
 
-    let mut highest: (usize, usize) = (0, 0);
-    let mut start: (usize, usize) = (0, 0);
-    let mut starts: Vec<(usize, usize)> = Vec::new();
+    let mut highest: Point = Point(0, 0);
+    let mut start: Point = Point(0, 0);
+    let mut starts: Vec<Point> = Vec::new();
 
-    let mut graph: HashMap<(usize, usize), Vec<(usize, usize)>> = HashMap::new();
+    let mut graph: HashMap<Point, Vec<Point>> = HashMap::new();
 
     for (y, row) in grid.iter().enumerate() {
         for (x, _) in row.iter().enumerate() {
             let elevation = &grid[y][x];
 
-            let mut neighbors: Vec<(usize, usize)> = Vec::new();
+            let mut neighbors: Vec<Point> = Vec::new();
 
             if y > 0 && can_traverse(elevation, &grid[y - 1][x]) {
-                neighbors.push((x, y - 1));
+                neighbors.push(Point(x, y - 1));
             }
 
             if y < v_bound && can_traverse(elevation, &grid[y + 1][x]) {
-                neighbors.push((x, y + 1));
+                neighbors.push(Point(x, y + 1));
             }
 
             if x > 0 && can_traverse(elevation, &grid[y][x - 1]) {
-                neighbors.push((x - 1, y));
+                neighbors.push(Point(x - 1, y));
             }
 
             if x < h_bound && can_traverse(elevation, &grid[y][x + 1]) {
-                neighbors.push((x + 1, y));
+                neighbors.push(Point(x + 1, y));
             }
 
-            graph.insert((x, y), neighbors);
+            graph.insert(Point(x, y), neighbors);
 
             if *elevation == 'E' {
-                highest = (x, y);
+                highest = Point(x, y);
             }
 
             if *elevation == 'S' || *elevation == 'a' {
-                starts.push((x, y));
+                starts.push(Point(x, y));
 
                 if *elevation == 'S' {
-                    start = (x, y);
+                    start = Point(x, y);
                 }
             }
         }
@@ -118,3 +106,6 @@ fn main() {
     println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
 }
+
+#[derive(Eq, Hash, PartialEq)]
+struct Point(usize, usize);

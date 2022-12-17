@@ -44,16 +44,18 @@ fn parse_input() -> Vec<Vec<char>> {
                     let mn = first.1.min(second.1);
                     let mx = first.1.max(second.1);
 
-                    for y in mn..mx + 1 {
-                        grid[y][first.0] = '#';
-                    }
+                    grid.iter_mut().take(mx + 1).skip(mn).for_each(|r| {
+                        r[first.0] = '#';
+                    });
                 } else if first.1 == second.1 {
                     let mn = first.0.min(second.0);
                     let mx = first.0.max(second.0);
 
-                    for x in mn..mx + 1 {
-                        grid[first.1][x] = '#';
-                    }
+                    grid[first.1]
+                        .iter_mut()
+                        .take(mx + 1)
+                        .skip(mn)
+                        .for_each(|c| *c = '#');
                 } else {
                     panic!("bad coordinates: {:?},{:?}", first, second)
                 }

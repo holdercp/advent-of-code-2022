@@ -1,5 +1,7 @@
 use std::collections::{HashMap, HashSet, VecDeque};
 
+use crate::Point;
+
 pub fn solve() -> u32 {
     let (_, starts, target, graph) = super::parse_input();
 
@@ -19,12 +21,12 @@ pub fn solve() -> u32 {
 }
 
 fn find_path_distance(
-    start: &(usize, usize),
-    target: &(usize, usize),
-    graph: &HashMap<(usize, usize), Vec<(usize, usize)>>,
+    start: &Point,
+    target: &Point,
+    graph: &HashMap<Point, Vec<Point>>,
 ) -> Option<u32> {
-    let mut visited: HashSet<&(usize, usize)> = HashSet::new();
-    let mut q: VecDeque<(u32, &(usize, usize))> = VecDeque::new();
+    let mut visited: HashSet<&Point> = HashSet::new();
+    let mut q: VecDeque<(u32, &Point)> = VecDeque::new();
 
     q.push_back((0, start));
     visited.insert(start);

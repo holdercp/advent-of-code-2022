@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use crate::{parse_input, Pair};
 
 pub fn solve() -> usize {
@@ -42,14 +44,14 @@ fn is_sorted_pair(p: &Pair) -> State {
             let left = left.as_u64().unwrap();
             let right = right.as_u64().unwrap();
 
-            if left < right {
-                return State::Sorted;
-            } else if left > right {
-                return State::Unsorted;
-            }
-
-            index += 1;
-            continue;
+            match left.cmp(&right) {
+                Ordering::Less => return State::Sorted,
+                Ordering::Greater => return State::Unsorted,
+                Ordering::Equal => {
+                    index += 1;
+                    continue;
+                }
+            };
         }
 
         if left.is_number() {

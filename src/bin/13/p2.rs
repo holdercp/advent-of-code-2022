@@ -1,3 +1,5 @@
+use std::cmp::Ordering;
+
 use serde_json::Value;
 
 use crate::parse_input2;
@@ -13,15 +15,12 @@ pub fn solve() -> usize {
             if index + 1 < packets.len() {
                 let res = compare(&packets[index], &packets[index + 1]);
 
-                match res {
-                    State::Unsorted => {
-                        let temp = packets[index].to_owned();
-                        packets[index] = packets[index + 1].to_owned();
-                        packets[index + 1] = temp;
-                        swap = true;
-                    }
-                    _ => (),
-                };
+                if let State::Unsorted = res {
+                    let temp = packets[index].to_owned();
+                    packets[index] = packets[index + 1].to_owned();
+                    packets[index + 1] = temp;
+                    swap = true;
+                }
 
                 index += 1;
             } else {
@@ -85,14 +84,14 @@ fn compare(a: &Value, b: &Value) -> State {
             let left = left.as_u64().unwrap();
             let right = right.as_u64().unwrap();
 
-            if left < right {
-                return State::Sorted;
-            } else if left > right {
-                return State::Unsorted;
-            }
-
-            index += 1;
-            continue;
+            match left.cmp(&right) {
+                Ordering::Less => return State::Sorted,
+                Ordering::Greater => return State::Unsorted,
+                Ordering::Equal => {
+                    index += 1;
+                    continue;
+                }
+            };
         }
 
         if left.is_number() {

@@ -4,14 +4,14 @@ pub fn solve() -> String {
     for step in procedure {
         let stack = &mut supply[step.1 - 1];
 
-        let mut taken: Vec<char> = stack.drain(stack.len() - step.0..).collect();
+        let mut taken: Vec<char> = stack.crates.drain(stack.crates.len() - step.0..).collect();
 
-        supply[step.2 - 1].append(&mut taken);
+        supply[step.2 - 1].crates.append(&mut taken);
     }
 
     let mut top = String::new();
     for mut stack in supply {
-        let c = stack.pop().unwrap();
+        let c = stack.crates.pop().unwrap();
         top.push(c);
     }
 

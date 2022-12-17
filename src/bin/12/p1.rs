@@ -1,10 +1,12 @@
 use std::collections::{HashSet, VecDeque};
 
+use crate::Point;
+
 pub fn solve() -> u32 {
     let (start, _, target, graph) = super::parse_input();
 
-    let mut visited: HashSet<&(usize, usize)> = HashSet::new();
-    let mut q: VecDeque<(u32, &(usize, usize))> = VecDeque::new();
+    let mut visited: HashSet<&Point> = HashSet::new();
+    let mut q: VecDeque<(u32, &Point)> = VecDeque::new();
 
     q.push_back((0, &start));
     visited.insert(&start);
