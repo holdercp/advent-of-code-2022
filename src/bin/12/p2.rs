@@ -8,14 +8,11 @@ pub fn solve() -> u32 {
     for s in starts {
         let res = find_path_distance(&s, &target, &graph);
 
-        match res {
-            Some(d) => {
-                if d < shortest {
-                    shortest = d;
-                }
+        if let Some(d) = res {
+            if d < shortest {
+                shortest = d;
             }
-            _ => (),
-        };
+        }
     }
 
     shortest
@@ -29,8 +26,8 @@ fn find_path_distance(
     let mut visited: HashSet<&(usize, usize)> = HashSet::new();
     let mut q: VecDeque<(u32, &(usize, usize))> = VecDeque::new();
 
-    q.push_back((0, &start));
-    visited.insert(&start);
+    q.push_back((0, start));
+    visited.insert(start);
 
     while !q.is_empty() {
         let (paths_taken, current) = q.pop_front().unwrap();

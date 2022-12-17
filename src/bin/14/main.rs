@@ -30,7 +30,7 @@ fn parse_input() -> Vec<Vec<char>> {
         let coors: Vec<(usize, usize)> = l
             .split(" -> ")
             .map(|s| {
-                let pair: Vec<usize> = s.split(",").flat_map(|c| c.parse()).collect();
+                let pair: Vec<usize> = s.split(',').flat_map(|c| c.parse()).collect();
                 (pair[0], pair[1])
             })
             .collect();

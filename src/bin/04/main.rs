@@ -19,7 +19,7 @@ struct Pair {
 
 impl Pair {
     fn build(p: &str) -> Pair {
-        let assignments: Vec<&str> = p.split(",").collect();
+        let assignments: Vec<&str> = p.split(',').collect();
 
         Pair {
             first: Assignment::build(assignments[0]),
@@ -35,7 +35,7 @@ struct Assignment {
 
 impl Assignment {
     fn build(a: &str) -> Assignment {
-        let sections: Vec<u32> = a.split("-").flat_map(|s| s.parse()).collect();
+        let sections: Vec<u32> = a.split('-').flat_map(|s| s.parse()).collect();
 
         Assignment {
             start: sections[0],

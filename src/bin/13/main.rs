@@ -30,10 +30,7 @@ fn parse_input2() -> Vec<Value> {
     input = input.replace("\n\n", "");
     input = input.replace("][", "]\n[");
 
-    input
-        .lines()
-        .flat_map(|packet| serde_json::from_str(packet))
-        .collect()
+    input.lines().flat_map(serde_json::from_str).collect()
 }
 
 fn main() {

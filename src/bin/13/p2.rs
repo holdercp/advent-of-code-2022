@@ -37,7 +37,7 @@ pub fn solve() -> usize {
     (find_divider_packet(&packets, 6) + 1) * (find_divider_packet(&packets, 2) + 1)
 }
 
-fn find_divider_packet(packets: &Vec<Value>, divider: u64) -> usize {
+fn find_divider_packet(packets: &[Value], divider: u64) -> usize {
     packets
         .iter()
         .position(|p| {

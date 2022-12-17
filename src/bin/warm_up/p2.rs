@@ -3,7 +3,7 @@ pub fn solve() -> u32 {
     let mut windows = depths.windows(3);
     let first = windows.next().unwrap();
 
-    let (increases, _) = windows.fold((0 as u32, first), |mut acc, w| {
+    let (increases, _) = windows.fold((0_u32, first), |mut acc, w| {
         let prev_sum: u32 = acc.1.iter().sum();
         let curr_sum: u32 = w.iter().sum();
 

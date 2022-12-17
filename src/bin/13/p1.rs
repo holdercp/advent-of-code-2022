@@ -7,12 +7,9 @@ pub fn solve() -> usize {
     for (i, p) in pairs.iter().enumerate() {
         let res = is_sorted_pair(p);
 
-        match res {
-            State::Sorted => {
-                sum += i + 1;
-            }
-            _ => (),
-        };
+        if let State::Sorted = res {
+            sum += i + 1;
+        }
     }
 
     sum
