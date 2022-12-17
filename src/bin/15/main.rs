@@ -100,24 +100,24 @@ impl Sensor {
     }
 
     fn get_boundary(&self) -> Vec<Location> {
-        let mut boundary = Vec::new();
-
-        boundary.push(Location {
-            x: self.location.x,
-            y: self.get_max_y(),
-        });
-        boundary.push(Location {
-            x: self.location.x,
-            y: self.get_min_y(),
-        });
-        boundary.push(Location {
-            x: self.get_min_x(),
-            y: self.location.y,
-        });
-        boundary.push(Location {
-            x: self.get_max_x(),
-            y: self.location.y,
-        });
+        let mut boundary = vec![
+            Location {
+                x: self.location.x,
+                y: self.get_max_y(),
+            },
+            Location {
+                x: self.location.x,
+                y: self.get_min_y(),
+            },
+            Location {
+                x: self.get_min_x(),
+                y: self.location.y,
+            },
+            Location {
+                x: self.get_max_x(),
+                y: self.location.y,
+            },
+        ];
 
         for i in 1..self.distance {
             boundary.push(Location {
