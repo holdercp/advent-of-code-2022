@@ -24,19 +24,19 @@ fn parse_input() -> Vec<Sensor> {
             let x2 = caps.get(3).unwrap().as_str().parse().unwrap();
             let y2 = caps.get(4).unwrap().as_str().parse().unwrap();
 
-            Sensor {
-                location: Location { x: x1, y: y1 },
-                beacon: Beacon {
+            Sensor::new(
+                x1,
+                y1,
+                Beacon {
                     location: Location { x: x2, y: y2 },
                 },
-                distance: x1.abs_diff(x2) + y1.abs_diff(y2),
-            }
+            )
         })
         .collect()
 }
 
 fn main() {
-    // println!("Part 1: {}", p1::solve());
+    println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
 }
 
@@ -59,6 +59,17 @@ struct Sensor {
 }
 
 impl Sensor {
+    fn new(x: i64, y: i64, beacon: Beacon) -> Self {
+        let location = Location { x, y };
+        let distance = x.abs_diff(beacon.location.x) + y.abs_diff(beacon.location.y);
+
+        Self {
+            location,
+            beacon,
+            distance,
+        }
+    }
+
     fn min_y(&self) -> i64 {
         self.location.y - self.distance as i64
     }
@@ -75,51 +86,27 @@ impl Sensor {
         self.location.x + self.distance as i64
     }
 
-    fn get_adjacent_locations(&self) -> Vec<Location> {
-        let mut locations = Vec::new();
+    fn adjacent_locations(&self) -> Vec<Location> {
+        let mut adjacent_locations = vec![];
 
-        self.get_boundary().into_iter().for_each(|l| {
-            if l.x >= self.location.x {
-                locations.push(Location { x: l.x + 1, y: l.y });
-            }
-
-            if l.x <= self.location.x {
-                locations.push(Location { x: l.x - 1, y: l.y });
-            }
-
-            if l.x == self.location.x && l.y == self.min_y() {
-                locations.push(Location { x: l.x, y: l.y - 1 });
-            }
-
-            if l.x == self.location.x && l.y == self.max_y() {
-                locations.push(Location { x: l.x, y: l.y + 1 });
-            }
-        });
-
-        locations
-    }
-
-    fn get_boundary(&self) -> Vec<Location> {
-        let mut boundary = vec![];
-
-        for x in self.min_x()..self.max_x() + 1 {
-            let y_operand: i64 = (self.distance - self.location.x.abs_diff(x))
+        for x in self.min_x() - 1..self.max_x() + 2 {
+            let y_operand: i64 = ((self.distance + 1) - self.location.x.abs_diff(x))
                 .try_into()
                 .unwrap();
 
-            boundary.push(Location {
+            adjacent_locations.push(Location {
                 x,
                 y: self.location.y + y_operand,
             });
 
             if y_operand != 0 {
-                boundary.push(Location {
+                adjacent_locations.push(Location {
                     x,
                     y: self.location.y - y_operand,
                 });
             };
         }
 
-        boundary
+        adjacent_locations
     }
 }
