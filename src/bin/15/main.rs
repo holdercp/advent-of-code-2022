@@ -36,7 +36,7 @@ fn parse_input() -> Vec<Sensor> {
 }
 
 fn main() {
-    println!("Part 1: {}", p1::solve());
+    // println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
 }
 
@@ -59,19 +59,19 @@ struct Sensor {
 }
 
 impl Sensor {
-    fn get_min_y(&self) -> i64 {
+    fn min_y(&self) -> i64 {
         self.location.y - self.distance as i64
     }
 
-    fn get_max_y(&self) -> i64 {
+    fn max_y(&self) -> i64 {
         self.location.y + self.distance as i64
     }
 
-    fn get_min_x(&self) -> i64 {
+    fn min_x(&self) -> i64 {
         self.location.x - self.distance as i64
     }
 
-    fn get_max_x(&self) -> i64 {
+    fn max_x(&self) -> i64 {
         self.location.x + self.distance as i64
     }
 
@@ -87,11 +87,11 @@ impl Sensor {
                 locations.push(Location { x: l.x - 1, y: l.y });
             }
 
-            if l.x == self.location.x && l.y == self.get_min_y() {
+            if l.x == self.location.x && l.y == self.min_y() {
                 locations.push(Location { x: l.x, y: l.y - 1 });
             }
 
-            if l.x == self.location.x && l.y == self.get_max_y() {
+            if l.x == self.location.x && l.y == self.max_y() {
                 locations.push(Location { x: l.x, y: l.y + 1 });
             }
         });
@@ -100,42 +100,24 @@ impl Sensor {
     }
 
     fn get_boundary(&self) -> Vec<Location> {
-        let mut boundary = vec![
-            Location {
-                x: self.location.x,
-                y: self.get_max_y(),
-            },
-            Location {
-                x: self.location.x,
-                y: self.get_min_y(),
-            },
-            Location {
-                x: self.get_min_x(),
-                y: self.location.y,
-            },
-            Location {
-                x: self.get_max_x(),
-                y: self.location.y,
-            },
-        ];
+        let mut boundary = vec![];
 
-        for i in 1..self.distance {
+        for x in self.min_x()..self.max_x() + 1 {
+            let y_operand: i64 = (self.distance - self.location.x.abs_diff(x))
+                .try_into()
+                .unwrap();
+
             boundary.push(Location {
-                x: self.location.x + i as i64,
-                y: self.get_min_y() + i as i64,
+                x,
+                y: self.location.y + y_operand,
             });
-            boundary.push(Location {
-                x: self.location.x + i as i64,
-                y: self.get_max_y() - i as i64,
-            });
-            boundary.push(Location {
-                x: self.location.x - i as i64,
-                y: self.get_min_y() + i as i64,
-            });
-            boundary.push(Location {
-                x: self.location.x - i as i64,
-                y: self.get_max_y() - i as i64,
-            });
+
+            if y_operand != 0 {
+                boundary.push(Location {
+                    x,
+                    y: self.location.y - y_operand,
+                });
+            };
         }
 
         boundary

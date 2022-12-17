@@ -11,8 +11,6 @@ pub fn solve() -> u64 {
     let mut all_adjacent: Vec<Location> = Vec::new();
     let mut adjacent_location_counts = HashMap::new();
 
-    println!("loaded");
-
     for s in sensors {
         let als = s.get_adjacent_locations();
         let filtered = als.iter().filter(|al| {
