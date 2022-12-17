@@ -1,4 +1,4 @@
-use std::{collections::HashSet, fs};
+use std::fs;
 
 use regex::Regex;
 
@@ -36,14 +36,14 @@ fn parse_input() -> Vec<Sensor> {
 }
 
 fn main() {
-    // println!("Part 1: {}", p1::solve());
+    println!("Part 1: {}", p1::solve());
     println!("Part 2: {}", p2::solve());
 }
 
 #[derive(Debug, PartialEq, Eq, Hash, Clone, Copy)]
 struct Location {
-    x: i32,
-    y: i32,
+    x: i64,
+    y: i64,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -55,24 +55,24 @@ struct Beacon {
 struct Sensor {
     location: Location,
     beacon: Beacon,
-    distance: u32,
+    distance: u64,
 }
 
 impl Sensor {
-    fn get_min_y(&self) -> i32 {
-        self.location.y - self.distance as i32
+    fn get_min_y(&self) -> i64 {
+        self.location.y - self.distance as i64
     }
 
-    fn get_max_y(&self) -> i32 {
-        self.location.y + self.distance as i32
+    fn get_max_y(&self) -> i64 {
+        self.location.y + self.distance as i64
     }
 
-    fn get_min_x(&self) -> i32 {
-        self.location.x - self.distance as i32
+    fn get_min_x(&self) -> i64 {
+        self.location.x - self.distance as i64
     }
 
-    fn get_max_x(&self) -> i32 {
-        self.location.x + self.distance as i32
+    fn get_max_x(&self) -> i64 {
+        self.location.x + self.distance as i64
     }
 
     fn get_adjacent_locations(&self) -> Vec<Location> {
@@ -121,20 +121,20 @@ impl Sensor {
 
         for i in 1..self.distance {
             boundary.push(Location {
-                x: self.location.x + i as i32,
-                y: self.get_min_y() + i as i32,
+                x: self.location.x + i as i64,
+                y: self.get_min_y() + i as i64,
             });
             boundary.push(Location {
-                x: self.location.x + i as i32,
-                y: self.get_max_y() - i as i32,
+                x: self.location.x + i as i64,
+                y: self.get_max_y() - i as i64,
             });
             boundary.push(Location {
-                x: self.location.x - i as i32,
-                y: self.get_min_y() + i as i32,
+                x: self.location.x - i as i64,
+                y: self.get_min_y() + i as i64,
             });
             boundary.push(Location {
-                x: self.location.x - i as i32,
-                y: self.get_max_y() - i as i32,
+                x: self.location.x - i as i64,
+                y: self.get_max_y() - i as i64,
             });
         }
 

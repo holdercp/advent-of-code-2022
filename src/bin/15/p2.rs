@@ -1,11 +1,11 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use crate::Location;
 
-const LOWER_BOUND: i32 = 0;
-const UPPER_BOUND: i32 = 4_000_000;
+const LOWER_BOUND: i64 = 0;
+const UPPER_BOUND: i64 = 4_000_000;
 
-pub fn solve() -> i32 {
+pub fn solve() -> u64 {
     let sensors = super::parse_input();
 
     let mut all_adjacent: Vec<Location> = Vec::new();
@@ -31,14 +31,10 @@ pub fn solve() -> i32 {
 
     println!("got adjacent counts");
 
-    let candidates: Vec<&Location> = adjacent_location_counts
+    let beacon = adjacent_location_counts
         .iter()
-        .filter(|(k, v)| **v >= 4)
-        .map(|(k, v)| k)
-        .collect();
+        .max_by_key(|(_, v)| *v)
+        .unwrap();
 
-    println!("got adjacent counts 2");
-
-    println!("{:?}", candidates);
-    0
+    (beacon.0.x * UPPER_BOUND + beacon.0.y).try_into().unwrap()
 }
