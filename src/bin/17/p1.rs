@@ -1,49 +1,72 @@
 use std::collections::HashSet;
 
-use crate::{JetPattern, Point, Rock};
+use crate::{Point, Rock, Wind};
 
 pub fn solve() -> u32 {
-    let patterns = super::parse_input();
+    let wind = super::parse_input();
     let shape_order = super::get_shape_arr();
 
     const LEFT_WALL: u32 = 0;
-    const RIGHT_WALL: u32 = 6;
+    const RIGHT_WALL: u32 = 8;
     const FLOOR: u32 = 0;
-    const LIMIT: usize = 2022;
+    const LIMIT: u32 = 2022;
+    const HEIGHT_OFFSET: u32 = 1;
 
-    let mut rocks_fallen = 0;
-    let mut tower_height = 0;
+    let mut rocks_fallen: u32 = 0;
+    let mut wind_index = 0;
+    let mut tower_height = HEIGHT_OFFSET;
 
-    let mut chamber: Vec<Vec<Option<char>>> = Vec::new();
+    let mut chamber: HashSet<Point> = HashSet::new();
 
     loop {
-        let rock = Rock::new(&shape_order[rocks_fallen % 5], &tower_height);
+        let mut rock = Rock::new(&shape_order[rocks_fallen as usize % 5], &tower_height);
 
         rocks_fallen += 1;
+
         if rocks_fallen > LIMIT {
             break;
         }
 
-        println!("{:?}", rock);
-        // Expand chamber by shape height
-        // Calculate where shape will shift in 4 cycles
+        loop {
+            match wind[wind_index % wind.len()] {
+                Wind::Left => {
+                    let shifted = rock.shift_left();
 
-        // Update tower height
-    }
+                    if !shifted
+                        .iter()
+                        .any(|p| p.x == LEFT_WALL || chamber.get(p).is_some())
+                    {
+                        rock.points = shifted;
+                    }
+                }
+                Wind::Right => {
+                    let shifted = rock.shift_right();
 
-    0
-}
+                    if !shifted
+                        .iter()
+                        .any(|p| p.x == RIGHT_WALL || chamber.get(p).is_some())
+                    {
+                        rock.points = shifted;
+                    }
+                }
+            };
 
-enum Movement {
-    Jet,
-    Fall,
-}
+            wind_index += 1;
 
-impl Movement {
-    fn toggle(movement: Movement) -> Movement {
-        match movement {
-            Movement::Fall => Movement::Jet,
-            Movement::Jet => Movement::Fall,
+            let fallen = rock.fall();
+
+            if fallen
+                .iter()
+                .any(|p| p.y == FLOOR || chamber.get(p).is_some())
+            {
+                chamber.extend(rock.points.into_iter());
+                tower_height = chamber.iter().map(|p| p.y).max().unwrap() + HEIGHT_OFFSET;
+                break;
+            } else {
+                rock.points = fallen;
+            }
         }
     }
+
+    tower_height - HEIGHT_OFFSET
 }
