@@ -2,24 +2,27 @@ use std::collections::HashSet;
 
 use crate::{Point, Rock, Wind};
 
-pub fn solve() -> u32 {
+pub fn solve() -> u64 {
     let wind = super::parse_input();
     let shape_order = super::get_shape_arr();
 
-    const LEFT_WALL: u32 = 0;
-    const RIGHT_WALL: u32 = 8;
-    const FLOOR: u32 = 0;
-    const LIMIT: u32 = 2022;
-    const HEIGHT_OFFSET: u32 = 1;
+    const LEFT_WALL: u64 = 0;
+    const RIGHT_WALL: u64 = 8;
+    const FLOOR: u64 = 0;
+    const LIMIT: u64 = 2022;
+    const HEIGHT_OFFSET: u64 = 1;
 
-    let mut rocks_fallen: u32 = 0;
+    let mut rocks_fallen: u64 = 0;
     let mut wind_index = 0;
     let mut tower_height = HEIGHT_OFFSET;
 
     let mut chamber: HashSet<Point> = HashSet::new();
 
     loop {
-        let mut rock = Rock::new(&shape_order[rocks_fallen as usize % 5], &tower_height);
+        let mut rock = Rock::new(
+            &shape_order[rocks_fallen as usize % shape_order.len()],
+            &tower_height,
+        );
 
         rocks_fallen += 1;
 
