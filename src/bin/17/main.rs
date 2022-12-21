@@ -32,7 +32,7 @@ struct Rock {
 }
 
 impl Rock {
-    fn new(s: &Shape, y: &i64) -> Self {
+    fn new(s: &Shape, y: i64) -> Self {
         match s {
             Shape::Line => Self {
                 points: vec![
@@ -101,7 +101,7 @@ impl Rock {
     }
 }
 
-#[derive(Hash, PartialEq, Eq, Clone, Copy, Debug)]
+#[derive(Hash, PartialEq, Eq, Clone, Copy)]
 struct Point {
     x: i64,
     y: i64,

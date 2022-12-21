@@ -25,10 +25,13 @@ pub fn solve() -> i64 {
     loop {
         let shape_index = rocks_fallen as usize % shape_order.len();
 
-        let mut rock = Rock::new(&shape_order[shape_index], &tower_height);
+        let mut rock = Rock::new(
+            &shape_order[shape_index],
+            &chamber.iter().map(|p| p.y).max().unwrap_or(-1) + 1,
+        );
 
         if cycled && rocks_fallen == cycle_remainder {
-            return tower_height;
+            return tower_height - 1;
         }
 
         rocks_fallen += 1;
@@ -77,25 +80,20 @@ pub fn solve() -> i64 {
                 states.get_key_value(&(normalized_floor, shape_index, wind_index % winds.len()));
 
             match state {
-                Some((
-                    (floor, _prev_shape_index, prev_wind_index),
-                    (prev_height, prev_rocks_fallen),
-                )) => {
+                Some(((floor, _, _), (prev_height, prev_rocks_fallen))) => {
                     // We've cycled
                     let height_delta = tower_height - prev_height;
                     let rocks_fallen_delta = rocks_fallen - prev_rocks_fallen;
 
-                    let rocks_remaining = TARGET - prev_rocks_fallen;
+                    let rocks_remaining = TARGET - rocks_fallen;
                     let cycles = rocks_remaining / rocks_fallen_delta;
-                    let height_gained = cycles as i64 * height_delta + prev_height;
+                    let height_gained = cycles as i64 * height_delta + tower_height;
 
                     cycle_remainder =
-                        rocks_remaining - (rocks_fallen_delta * cycles) + prev_rocks_fallen;
+                        rocks_remaining - (rocks_fallen_delta * cycles) + rocks_fallen;
 
-                    rocks_fallen = *prev_rocks_fallen;
-                    wind_index = *prev_wind_index;
                     tower_height = height_gained;
-                    chamber = unnormalize_floor(floor.to_vec(), tower_height);
+                    chamber = denormalize_floor(floor.to_vec(), tower_height);
 
                     cycled = true;
                     continue;
@@ -114,26 +112,22 @@ pub fn solve() -> i64 {
 }
 
 fn normalize_chamber_state(chamber: &[Point]) -> Vec<Point> {
-    // let max_ys = chamber.iter().fold(
-    //     [Point { x: 0, y: 0 }; 7],
-    //     |mut acc: [Point; 7], point: &Point| {
-    //         if acc[point.x as usize].y < point.y {
-    //             acc[point.x as usize] = *point;
-    //         }
+    let max_ys = chamber.iter().fold(
+        [Point { x: 0, y: 0 }; 7],
+        |mut acc: [Point; 7], point: &Point| {
+            if acc[point.x as usize].y < point.y {
+                acc[point.x as usize] = *point;
+            }
 
-    //         acc
-    //     },
-    // );
+            acc
+        },
+    );
 
-    let max_y = chamber.iter().max_by_key(|p| p.y).unwrap().y;
+    let min_y = max_ys.iter().min_by_key(|p| p.y).unwrap().y;
 
-    let mut floor: Vec<Point> = chamber
-        .iter()
-        .filter(|p| p.y >= max_y - 1103)
-        .cloned()
-        .collect();
+    let mut floor: Vec<Point> = chamber.iter().filter(|p| p.y >= min_y).cloned().collect();
 
-    let offset: i64 = 0_i64.abs_diff(max_y - 1103).try_into().unwrap();
+    let offset: i64 = 0_i64.abs_diff(min_y).try_into().unwrap();
     floor.iter_mut().for_each(|p| {
         p.y -= offset;
     });
@@ -141,7 +135,7 @@ fn normalize_chamber_state(chamber: &[Point]) -> Vec<Point> {
     floor
 }
 
-fn unnormalize_floor(mut floor: Vec<Point>, tower_height: i64) -> Vec<Point> {
+fn denormalize_floor(mut floor: Vec<Point>, tower_height: i64) -> Vec<Point> {
     let max_y = floor.iter().max_by_key(|p| p.y).unwrap().y;
 
     let offset: i64 = max_y.abs_diff(tower_height).try_into().unwrap();

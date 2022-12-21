@@ -20,7 +20,7 @@ pub fn solve() -> i64 {
     loop {
         let mut rock = Rock::new(
             &shape_order[rocks_fallen as usize % shape_order.len()],
-            &tower_height,
+            tower_height,
         );
 
         rocks_fallen += 1;
