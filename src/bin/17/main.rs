@@ -5,7 +5,7 @@ pub mod p2;
 
 fn main() {
     println!("Part 1: {}", p1::solve());
-    println!("Part 2: {}", p2::solve());
+    println!("Part 2: {:?}", p2::solve());
 }
 
 fn parse_input() -> Vec<Wind> {
@@ -32,47 +32,47 @@ struct Rock {
 }
 
 impl Rock {
-    fn new(s: &Shape, y: &u64) -> Self {
+    fn new(s: &Shape, y: &i64) -> Self {
         match s {
             Shape::Line => Self {
                 points: vec![
-                    Point::new(5, y + 3),
-                    Point::new(6, y + 3),
-                    Point::new(4, y + 3),
+                    Point::new(2, y + 3),
                     Point::new(3, y + 3),
+                    Point::new(4, y + 3),
+                    Point::new(5, y + 3),
                 ],
             },
             Shape::Plus => Self {
                 points: vec![
-                    Point::new(4, y + 5),
-                    Point::new(5, y + 4),
-                    Point::new(4, y + 3),
+                    Point::new(3, y + 5),
+                    Point::new(2, y + 4),
                     Point::new(3, y + 4),
                     Point::new(4, y + 4),
+                    Point::new(3, y + 3),
                 ],
             },
             Shape::J => Self {
                 points: vec![
-                    Point::new(5, y + 5),
-                    Point::new(5, y + 3),
+                    Point::new(4, y + 5),
+                    Point::new(4, y + 4),
                     Point::new(4, y + 3),
+                    Point::new(2, y + 3),
                     Point::new(3, y + 3),
-                    Point::new(5, y + 4),
                 ],
             },
             Shape::I => Self {
                 points: vec![
-                    Point::new(3, y + 6),
-                    Point::new(3, y + 5),
-                    Point::new(3, y + 3),
-                    Point::new(3, y + 4),
+                    Point::new(2, y + 6),
+                    Point::new(2, y + 5),
+                    Point::new(2, y + 4),
+                    Point::new(2, y + 3),
                 ],
             },
             Shape::Square => Self {
                 points: vec![
+                    Point::new(2, y + 4),
                     Point::new(3, y + 4),
-                    Point::new(4, y + 4),
-                    Point::new(4, y + 3),
+                    Point::new(2, y + 3),
                     Point::new(3, y + 3),
                 ],
             },
@@ -101,14 +101,14 @@ impl Rock {
     }
 }
 
-#[derive(Hash, PartialEq, Eq)]
+#[derive(Hash, PartialEq, Eq, Clone, Copy, Debug)]
 struct Point {
-    x: u64,
-    y: u64,
+    x: i64,
+    y: i64,
 }
 
 impl Point {
-    fn new(x: u64, y: u64) -> Self {
+    fn new(x: i64, y: i64) -> Self {
         Self { x, y }
     }
 }

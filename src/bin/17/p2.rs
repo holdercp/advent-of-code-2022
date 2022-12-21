@@ -2,34 +2,36 @@ use std::collections::HashMap;
 
 use crate::{Point, Rock, Wind};
 
-pub fn solve() -> u64 {
+pub fn solve() -> i64 {
     let winds = super::parse_input();
     let shape_order = super::get_shape_arr();
 
-    const LEFT_WALL: u64 = 0;
-    const RIGHT_WALL: u64 = 8;
-    const FLOOR: u64 = 0;
-    const LIMIT: u64 = 1_000_000_000_000;
-    const HEIGHT_OFFSET: u64 = 1;
+    const LEFT_WALL: i64 = -1;
+    const RIGHT_WALL: i64 = 7;
+    const FLOOR: i64 = -1;
+    const TARGET: u64 = 1_000_000_000_000;
+
+    let mut cycled = false;
+    let mut cycle_remainder = 0;
 
     let mut rocks_fallen: u64 = 0;
     let mut wind_index = 0;
-    let mut tower_height = HEIGHT_OFFSET;
+    let mut tower_height: i64 = 0;
 
     let mut chamber: Vec<Point> = Vec::new();
 
-    // let mut index_state = HashMap::new();
+    let mut states: HashMap<(Vec<Point>, usize, usize), (i64, u64)> = HashMap::new();
 
     loop {
         let shape_index = rocks_fallen as usize % shape_order.len();
 
         let mut rock = Rock::new(&shape_order[shape_index], &tower_height);
 
-        rocks_fallen += 1;
-
-        if rocks_fallen > LIMIT {
-            break;
+        if cycled && rocks_fallen == cycle_remainder {
+            return tower_height;
         }
+
+        rocks_fallen += 1;
 
         loop {
             match &winds[wind_index % winds.len()] {
@@ -61,51 +63,87 @@ pub fn solve() -> u64 {
 
             if fallen.iter().any(|p| p.y == FLOOR || chamber.contains(p)) {
                 chamber.extend(rock.points.into_iter());
-                tower_height = chamber.iter().map(|p| p.y).max().unwrap() + HEIGHT_OFFSET;
+                tower_height = chamber.iter().map(|p| p.y).max().unwrap() + 1;
                 break;
             } else {
                 rock.points = fallen;
             }
         }
 
-        // let res = states.get(&(shape_index, wind_index - 1));
+        if !cycled {
+            let normalized_floor = normalize_chamber_state(&chamber);
 
-        // match res {
-        //     Some((prev_chamber, prev_height)) => {
-        //         if prev_chamber.len() % 2 == 0 {
-        //             let chamber
-        //         } else {
-        //             states.insert((shape_index, wind_index), (chamber, tower_height));
-        //         }
-        //     }
-        //     None => states.insert((shape_index, wind_index), (chamber, tower_height)),
-        // };
+            let state =
+                states.get_key_value(&(normalized_floor, shape_index, wind_index % winds.len()));
 
-        if chamber.len() % 2 == 0 {
-            let (left, right) = chamber.split_at(chamber.len() / 2);
+            match state {
+                Some((
+                    (floor, _prev_shape_index, prev_wind_index),
+                    (prev_height, prev_rocks_fallen),
+                )) => {
+                    // We've cycled
+                    let height_delta = tower_height - prev_height;
+                    let rocks_fallen_delta = rocks_fallen - prev_rocks_fallen;
 
-            let y_offset = left[0].y.abs_diff(right[0].y);
+                    let rocks_remaining = TARGET - prev_rocks_fallen;
+                    let cycles = rocks_remaining / rocks_fallen_delta;
+                    let height_gained = cycles as i64 * height_delta + prev_height;
 
-            let right: Vec<Point> = right
-                .iter()
-                .map(|p| Point {
-                    x: p.x,
-                    y: p.y - y_offset,
-                })
-                .collect();
+                    cycle_remainder =
+                        rocks_remaining - (rocks_fallen_delta * cycles) + prev_rocks_fallen;
 
-            let eq = left
-                .iter()
-                .enumerate()
-                .all(|(i, p)| p.x == right[i].x && p.y == right[i].y);
+                    rocks_fallen = *prev_rocks_fallen;
+                    wind_index = *prev_wind_index;
+                    tower_height = height_gained;
+                    chamber = unnormalize_floor(floor.to_vec(), tower_height);
 
-            if eq {
-                println!("{} {}", tower_height, rocks_fallen);
-            }
+                    cycled = true;
+                    continue;
+                }
+                None => {
+                    let normalized_floor = normalize_chamber_state(&chamber);
+
+                    states.insert(
+                        (normalized_floor, shape_index, wind_index % winds.len()),
+                        (tower_height, rocks_fallen),
+                    );
+                }
+            };
         }
-
-        println!("{}", tower_height);
     }
+}
 
-    tower_height - HEIGHT_OFFSET
+fn normalize_chamber_state(chamber: &[Point]) -> Vec<Point> {
+    let max_ys = chamber.iter().fold(
+        [Point { x: 0, y: 0 }; 7],
+        |mut acc: [Point; 7], point: &Point| {
+            if acc[point.x as usize].y < point.y {
+                acc[point.x as usize] = *point;
+            }
+
+            acc
+        },
+    );
+
+    let min_y = max_ys.iter().min_by_key(|p| p.y).unwrap().y;
+
+    let mut floor: Vec<Point> = chamber.iter().filter(|p| p.y >= min_y).cloned().collect();
+
+    let offset: i64 = 0_i64.abs_diff(min_y).try_into().unwrap();
+    floor.iter_mut().for_each(|p| {
+        p.y -= offset;
+    });
+
+    floor
+}
+
+fn unnormalize_floor(mut floor: Vec<Point>, tower_height: i64) -> Vec<Point> {
+    let max_y = floor.iter().max_by_key(|p| p.y).unwrap().y;
+
+    let offset: i64 = max_y.abs_diff(tower_height).try_into().unwrap();
+    floor.iter_mut().for_each(|p| {
+        p.y += offset;
+    });
+
+    floor
 }
