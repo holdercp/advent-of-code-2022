@@ -114,22 +114,26 @@ pub fn solve() -> i64 {
 }
 
 fn normalize_chamber_state(chamber: &[Point]) -> Vec<Point> {
-    let max_ys = chamber.iter().fold(
-        [Point { x: 0, y: 0 }; 7],
-        |mut acc: [Point; 7], point: &Point| {
-            if acc[point.x as usize].y < point.y {
-                acc[point.x as usize] = *point;
-            }
+    // let max_ys = chamber.iter().fold(
+    //     [Point { x: 0, y: 0 }; 7],
+    //     |mut acc: [Point; 7], point: &Point| {
+    //         if acc[point.x as usize].y < point.y {
+    //             acc[point.x as usize] = *point;
+    //         }
 
-            acc
-        },
-    );
+    //         acc
+    //     },
+    // );
 
-    let min_y = max_ys.iter().min_by_key(|p| p.y).unwrap().y;
+    let max_y = chamber.iter().max_by_key(|p| p.y).unwrap().y;
 
-    let mut floor: Vec<Point> = chamber.iter().filter(|p| p.y >= min_y).cloned().collect();
+    let mut floor: Vec<Point> = chamber
+        .iter()
+        .filter(|p| p.y >= max_y - 1103)
+        .cloned()
+        .collect();
 
-    let offset: i64 = 0_i64.abs_diff(min_y).try_into().unwrap();
+    let offset: i64 = 0_i64.abs_diff(max_y - 1103).try_into().unwrap();
     floor.iter_mut().for_each(|p| {
         p.y -= offset;
     });
