@@ -19,6 +19,7 @@ fn parse_input() -> HashMap<String, Monkey> {
 
         let monkey = if c.get(3).is_none() {
             Monkey {
+                name: name.to_string(),
                 number: num_or_other.parse().unwrap(),
                 operation: Operation::None,
                 others: vec![],
@@ -36,9 +37,10 @@ fn parse_input() -> HashMap<String, Monkey> {
             };
 
             Monkey {
+                name: name.to_string(),
                 operation,
                 others: vec![num_or_other.to_string(), other.to_string()],
-                number: 0,
+                number: 0.0,
             }
         };
 
@@ -54,9 +56,10 @@ fn main() {
 }
 
 struct Monkey {
+    name: String,
     others: Vec<String>,
     operation: Operation,
-    number: u64,
+    number: f64,
 }
 
 enum Operation {

@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::{Monkey, Operation};
 
-pub fn solve() -> u64 {
+pub fn solve() -> f64 {
     let monkeys = super::parse_input();
 
     let root = monkeys.get("root").unwrap();
@@ -10,7 +10,7 @@ pub fn solve() -> u64 {
     compute_monkey(root, &monkeys)
 }
 
-fn compute_monkey(m: &Monkey, monkeys: &HashMap<String, Monkey>) -> u64 {
+fn compute_monkey(m: &Monkey, monkeys: &HashMap<String, Monkey>) -> f64 {
     if m.others.is_empty() {
         return m.number;
     }
