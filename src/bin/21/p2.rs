@@ -13,28 +13,23 @@ pub fn solve() -> f64 {
     let left_res = compute_monkey(left, &monkeys, &Vec::new());
     let right_res = compute_monkey(right, &monkeys, &Vec::new());
 
+    let process_ops = |acc: f64, op: &InverseOperation| match op {
+        InverseOperation::Add(operand) => acc + operand,
+        InverseOperation::Subtract(operand) => acc - operand,
+        InverseOperation::SubtractBy(operand) => (acc - operand) * -1.0,
+        InverseOperation::Multiply(operand) => acc * operand,
+        InverseOperation::Divide(operand) => acc / operand,
+        InverseOperation::DivideBy(operand) => operand / acc,
+    };
+
     if left_res.1.is_empty() {
         if let Resolution::Number(res) = left_res.0 {
-            right_res.1.iter().fold(res, |acc: f64, op| match op {
-                InverseOperation::Add(operand) => acc + operand,
-                InverseOperation::Subtract(operand) => acc - operand,
-                InverseOperation::SubtractBy(operand) => (acc - operand) * -1.0,
-                InverseOperation::Multiply(operand) => acc * operand,
-                InverseOperation::Divide(operand) => acc / operand,
-                InverseOperation::DivideBy(operand) => operand / acc,
-            })
+            right_res.1.iter().fold(res, process_ops)
         } else {
             panic!("should not get here")
         }
     } else if let Resolution::Number(res) = right_res.0 {
-        left_res.1.iter().rfold(res, |acc: f64, op| match op {
-            InverseOperation::Add(operand) => acc + operand,
-            InverseOperation::Subtract(operand) => acc - operand,
-            InverseOperation::SubtractBy(operand) => (acc - operand) * -1.0,
-            InverseOperation::Multiply(operand) => acc * operand,
-            InverseOperation::Divide(operand) => acc / operand,
-            InverseOperation::DivideBy(operand) => operand / acc,
-        })
+        left_res.1.iter().rfold(res, process_ops)
     } else {
         1.0
     }
