@@ -710,6 +710,43 @@
     {
       "type": "lldb",
       "request": "launch",
+      "name": "Debug executable '22'",
+      "cargo": {
+        "args": [
+          "build",
+          "--bin=22",
+          "--package=advent-of-code-2022"
+        ],
+        "filter": {
+          "name": "22",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable '22'",
+      "cargo": {
+        "args": [
+          "test",
+          "--no-run",
+          "--bin=22",
+          "--package=advent-of-code-2022"
+        ],
+        "filter": {
+          "name": "22",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
       "name": "Debug executable '23'",
       "cargo": {
         "args": [
