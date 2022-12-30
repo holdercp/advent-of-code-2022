@@ -41,6 +41,29 @@ impl Tile {
 }
 
 #[derive(Hash, PartialEq, Eq)]
+struct SidePoint(usize, Point);
+
+struct SideTile {
+    location: SidePoint,
+    value: TileValue,
+    neighbors: HashMap<Direction, SidePoint>,
+}
+
+impl SideTile {
+    fn new(
+        location: SidePoint,
+        value: TileValue,
+        neighbors: HashMap<Direction, SidePoint>,
+    ) -> Self {
+        Self {
+            location,
+            value,
+            neighbors,
+        }
+    }
+}
+
+#[derive(Hash, PartialEq, Eq)]
 enum TileValue {
     Vacant,
     Wall,
