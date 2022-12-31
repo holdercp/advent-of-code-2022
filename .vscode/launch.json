@@ -9,11 +9,7 @@
       "request": "launch",
       "name": "Debug executable 'warm_up'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=warm_up",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=warm_up", "--package=advent-of-code-2022"],
         "filter": {
           "name": "warm_up",
           "kind": "bin"
@@ -46,11 +42,7 @@
       "request": "launch",
       "name": "Debug executable '1'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=1",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=1", "--package=advent-of-code-2022"],
         "filter": {
           "name": "1",
           "kind": "bin"
@@ -83,11 +75,7 @@
       "request": "launch",
       "name": "Debug executable '2'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=2",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=2", "--package=advent-of-code-2022"],
         "filter": {
           "name": "2",
           "kind": "bin"
@@ -120,11 +108,7 @@
       "request": "launch",
       "name": "Debug executable '3'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=3",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=3", "--package=advent-of-code-2022"],
         "filter": {
           "name": "3",
           "kind": "bin"
@@ -157,11 +141,7 @@
       "request": "launch",
       "name": "Debug executable '4'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=4",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=4", "--package=advent-of-code-2022"],
         "filter": {
           "name": "4",
           "kind": "bin"
@@ -194,11 +174,7 @@
       "request": "launch",
       "name": "Debug executable '5'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=5",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=5", "--package=advent-of-code-2022"],
         "filter": {
           "name": "5",
           "kind": "bin"
@@ -231,11 +207,7 @@
       "request": "launch",
       "name": "Debug executable '6'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=6",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=6", "--package=advent-of-code-2022"],
         "filter": {
           "name": "6",
           "kind": "bin"
@@ -268,11 +240,7 @@
       "request": "launch",
       "name": "Debug executable '7'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=7",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=7", "--package=advent-of-code-2022"],
         "filter": {
           "name": "7",
           "kind": "bin"
@@ -305,11 +273,7 @@
       "request": "launch",
       "name": "Debug executable '8'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=8",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=8", "--package=advent-of-code-2022"],
         "filter": {
           "name": "8",
           "kind": "bin"
@@ -342,11 +306,7 @@
       "request": "launch",
       "name": "Debug executable '9'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=9",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=9", "--package=advent-of-code-2022"],
         "filter": {
           "name": "9",
           "kind": "bin"
@@ -379,11 +339,7 @@
       "request": "launch",
       "name": "Debug executable '10'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=10",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=10", "--package=advent-of-code-2022"],
         "filter": {
           "name": "10",
           "kind": "bin"
@@ -416,11 +372,7 @@
       "request": "launch",
       "name": "Debug executable '11'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=11",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=11", "--package=advent-of-code-2022"],
         "filter": {
           "name": "11",
           "kind": "bin"
@@ -453,11 +405,7 @@
       "request": "launch",
       "name": "Debug executable '12'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=12",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=12", "--package=advent-of-code-2022"],
         "filter": {
           "name": "12",
           "kind": "bin"
@@ -490,11 +438,7 @@
       "request": "launch",
       "name": "Debug executable '13'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=13",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=13", "--package=advent-of-code-2022"],
         "filter": {
           "name": "13",
           "kind": "bin"
@@ -527,11 +471,7 @@
       "request": "launch",
       "name": "Debug executable '14'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=14",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=14", "--package=advent-of-code-2022"],
         "filter": {
           "name": "14",
           "kind": "bin"
@@ -564,11 +504,7 @@
       "request": "launch",
       "name": "Debug executable '15'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=15",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=15", "--package=advent-of-code-2022"],
         "filter": {
           "name": "15",
           "kind": "bin"
@@ -601,11 +537,7 @@
       "request": "launch",
       "name": "Debug executable '17'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=17",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=17", "--package=advent-of-code-2022"],
         "filter": {
           "name": "17",
           "kind": "bin"
@@ -638,11 +570,7 @@
       "request": "launch",
       "name": "Debug executable '18'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=18",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=18", "--package=advent-of-code-2022"],
         "filter": {
           "name": "18",
           "kind": "bin"
@@ -673,13 +601,42 @@
     {
       "type": "lldb",
       "request": "launch",
-      "name": "Debug executable '21'",
+      "name": "Debug executable '20'",
+      "cargo": {
+        "args": ["build", "--bin=20", "--package=advent-of-code-2022"],
+        "filter": {
+          "name": "20",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable '20'",
       "cargo": {
         "args": [
-          "build",
-          "--bin=21",
+          "test",
+          "--no-run",
+          "--bin=20",
           "--package=advent-of-code-2022"
         ],
+        "filter": {
+          "name": "20",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable '21'",
+      "cargo": {
+        "args": ["build", "--bin=21", "--package=advent-of-code-2022"],
         "filter": {
           "name": "21",
           "kind": "bin"
@@ -712,11 +669,7 @@
       "request": "launch",
       "name": "Debug executable '22'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=22",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=22", "--package=advent-of-code-2022"],
         "filter": {
           "name": "22",
           "kind": "bin"
@@ -749,11 +702,7 @@
       "request": "launch",
       "name": "Debug executable '23'",
       "cargo": {
-        "args": [
-          "build",
-          "--bin=23",
-          "--package=advent-of-code-2022"
-        ],
+        "args": ["build", "--bin=23", "--package=advent-of-code-2022"],
         "filter": {
           "name": "23",
           "kind": "bin"
