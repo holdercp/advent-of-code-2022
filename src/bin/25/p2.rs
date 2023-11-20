@@ -1,3 +1,3 @@
 pub fn solve() -> String {
-    String::from("Not implemented")
+    String::from("Merry Christmas!")
 }
